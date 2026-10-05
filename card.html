@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<title>Poker Ligi · görsel</title>
+<link rel="stylesheet" href="assets/fonts.css">
+<link rel="stylesheet" href="assets/card.css">
+<style>html, body { margin: 0; background: #3d0914; }</style>
+</head>
+<body>
+<div id="card" class="card" lang="tr"></div>
+<script type="module">
+import * as S from './assets/stats.js';
+import { cardHTML, layoutCard } from './assets/card.js';
+
+const params = new URLSearchParams(location.search);
+const id = params.get('s') || location.hash.slice(1) || 'ana';
+const today = params.get('today') || S.todayISO();
+const el = document.getElementById('card');
+
+try {
+  const db = await (await fetch(`data/db.json?t=${Date.now()}`, { cache: 'no-store' })).json();
+  const scope = S.findScope(db, id, today) || S.findScope(db, 'ana', today);
+  el.innerHTML = cardHTML(S.buildBoard(S.gamesFor(db, scope), scope, S.nickMap(db)));
+  const sample = 'Poker Ligi İĞŞıçöü 0123456789%';
+  await Promise.all([
+    '700 34px "Big Shoulders Display"', '800 60px "Big Shoulders Display"', '900 132px "Big Shoulders Display"',
+    '500 27px Barlow', '600 35px Barlow', '700 20px Barlow',
+  ].map(f => document.fonts.load(f, sample)));
+  await document.fonts.ready;
+  layoutCard(el);
+  window.__cardId = scope.id;
+  window.__cardReady = true;
+} catch (err) {
+  window.__cardError = String(err);
+  throw err;
+}
+</script>
+</body>
+</html>

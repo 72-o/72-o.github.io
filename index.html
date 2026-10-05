@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#5a0f1f">
+<title>Poker Ligi</title>
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/fonts.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="bar">
+    <a class="brand" href="#ana">Poker Ligi</a>
+    <nav class="tabs" aria-label="Sekmeler">
+      <a class="tab" href="#ana" data-tab="ana">Ana Tablo</a>
+      <div class="dd">
+        <button class="tab dd-btn" id="lig-btn" type="button" aria-haspopup="true" aria-expanded="false" data-tab="lig">
+          <span id="lig-btn-label">Ligler</span><span class="caret" aria-hidden="true"></span>
+        </button>
+        <div class="dd-menu" id="lig-menu" hidden></div>
+      </div>
+      <a class="tab" href="#yeni" data-tab="yeni">Yeni Veri</a>
+      <a class="tab" href="#yardim" data-tab="yardim">Yardım</a>
+    </nav>
+  </div>
+</header>
+<main id="view" class="wrap">
+  <p class="loading">Yükleniyor…</p>
+</main>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<noscript><p class="wrap">Bu sayfa JavaScript gerektiriyor.</p></noscript>
+<script type="module" src="assets/app.js"></script>
+</body>
+</html>

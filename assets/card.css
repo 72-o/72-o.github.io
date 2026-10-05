@@ -1,0 +1,63 @@
+/* The 1080×1350 share image ("Bordo"). Row height --rh is set by layoutCard() to fit the player count. */
+.card {
+  --paper: #fff6ee;
+  --dim: rgba(255, 246, 238, .6);
+  --hair: rgba(255, 246, 238, .16);
+  --gold: #f3c65a;
+  --silver: #e0e3e7;
+  --bronze: #e8a06a;
+  --rh: 60px;
+  --cols: 104px 1fr 100px 84px 84px 84px 150px;
+  --display: 'Big Shoulders Display', 'Arial Narrow', sans-serif;
+  width: 1080px;
+  height: 1350px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  padding: 66px 72px 56px;
+  overflow: hidden;
+  background: linear-gradient(168deg, #7c162b 0%, #5a0f1f 52%, #3d0914 100%);
+  color: var(--paper);
+  font-family: 'Barlow', system-ui, sans-serif;
+  line-height: 1.2;
+  text-align: left;
+}
+.card * { box-sizing: border-box; }
+
+.card .c-head { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 24px; }
+.card .c-eyebrow { font-family: var(--display); font-size: 34px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--gold); }
+.card .c-title { font-family: var(--display); font-weight: 900; font-size: 124px; line-height: 1.04; text-transform: uppercase; margin-top: 10px; }
+.card .c-count { display: flex; flex-direction: column; align-items: flex-end; }
+.card .c-count b { font-family: var(--display); font-weight: 800; font-size: 150px; line-height: .8; color: var(--gold); font-variant-numeric: tabular-nums; }
+.card .c-count span { font-size: 23px; font-weight: 500; color: var(--dim); margin-top: 10px; }
+
+.card .c-last { display: flex; align-items: baseline; gap: 22px; background: rgba(0, 0, 0, .2); border-radius: 14px; padding: 18px 26px; }
+.card .c-last-label { font-size: 20px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); white-space: nowrap; }
+.card .c-last-list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 24px; font-size: 27px; font-weight: 500; }
+.card .c-last-list b { color: var(--dim); font-weight: 700; margin-right: 7px; }
+
+.card .c-table { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+.card .c-th, .card .c-row { display: grid; grid-template-columns: var(--cols); align-items: center; }
+.card .c-th { font-size: 19px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--dim); padding-bottom: 10px; border-bottom: 2px solid var(--hair); }
+.card .c-rows { flex: 1 1 0; min-height: 0; overflow: hidden; display: flex; flex-direction: column; }
+.card .c-row { flex: none; height: var(--rh); border-bottom: 1px solid var(--hair); }
+.card .c-row.lead { background: linear-gradient(90deg, rgba(243, 198, 90, .16), rgba(243, 198, 90, 0)); }
+.card .c-g, .card .c-m { text-align: center; font-variant-numeric: tabular-nums; }
+.card .c-s { text-align: right; font-variant-numeric: tabular-nums; }
+.card .c-row .c-rank { font-family: var(--display); font-weight: 800; font-size: calc(var(--rh) * .77); color: var(--dim); padding-left: 14px; line-height: 1; }
+.card .c-row .c-rank.top { color: var(--c); font-size: calc(var(--rh) * .9); }
+.card .c-row .c-name { font-weight: 600; font-size: calc(var(--rh) * .58); min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card .c-row .c-g, .card .c-row .c-m { font-family: var(--display); font-weight: 700; font-size: calc(var(--rh) * .66); }
+.card .c-row .c-s { font-family: var(--display); font-weight: 800; font-size: calc(var(--rh) * .83); }
+.card .zero { opacity: .32; }
+.card .mh { display: inline-flex; align-items: center; justify-content: center; gap: 7px; }
+.card .mh::before { content: ""; width: .62em; height: .62em; border-radius: 50%; background: var(--c); }
+
+.card .c-note { font-size: 24px; color: var(--dim); }
+.card .c-note span { white-space: nowrap; }
+.card .c-note b { color: var(--paper); font-weight: 600; }
+.card .c-foot { display: flex; justify-content: space-between; gap: 24px; font-size: 21px; color: var(--dim); }
+.card .c-foot b { color: var(--paper); font-weight: 600; }
+
+.card .c-empty { flex: 1; display: grid; place-items: center; font-family: var(--display); font-weight: 800; font-size: 72px; color: var(--dim); text-transform: uppercase; }
