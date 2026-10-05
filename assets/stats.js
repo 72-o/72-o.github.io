@@ -1,7 +1,7 @@
 // Shared by the site (browser) and the image build (Node). Pure functions only:
 // everything shown anywhere is derived from data/db.json through this file.
 
-export const MIN_GAMES = 3;      // games needed to enter the ranking
+export const MIN_SHARE = 30;     // % of the board's games needed to enter the ranking
 export const MIN_QUALIFIED = 3;  // below this many qualified players, everyone is ranked
 export const MIN_PLAYERS = 3;    // smallest table we accept as a game
 
@@ -154,6 +154,11 @@ export function displayRating(mu, sigma) {
 
 // ---------- boards ----------
 
+// Games needed to enter a board's ranking, rounded up. Integer math keeps 30% of 10 at exactly 3.
+export function minGamesFor(gameCount) {
+  return Math.ceil(gameCount * MIN_SHARE / 100);
+}
+
 export function buildBoard(games, scope, nicks = {}) {
   const map = new Map();
   const get = name => {
@@ -201,15 +206,17 @@ export function buildBoard(games, scope, nicks = {}) {
     };
   });
 
-  const qualified = players.filter(p => p.games >= MIN_GAMES);
+  const minGames = minGamesFor(games.length);
+  const qualified = players.filter(p => p.games >= minGames);
   const fallback = players.length > 0 && qualified.length < MIN_QUALIFIED;
   const main = fallback ? players : qualified;
-  const below = fallback ? [] : players.filter(p => p.games < MIN_GAMES);
+  const below = fallback ? [] : players.filter(p => p.games < minGames);
 
   return {
     scope,
     gameCount: games.length,
     playerCount: players.length,
+    minGames,
     last: games.length
       ? { ...games[games.length - 1], players: games[games.length - 1].players.map(n => displayName(n, nicks)) }
       : null,

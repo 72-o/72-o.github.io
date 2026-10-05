@@ -1,5 +1,5 @@
 // Builds the share image markup for one board. Used by card.html (screenshotted by the build).
-import { MIN_GAMES, formatDate, fmtPct } from './stats.js';
+import { MIN_SHARE, formatDate, fmtPct } from './stats.js';
 
 export const LEAGUE_NAME = 'Poker Ligi';
 export const SITE_URL = '72-o.github.io';
@@ -40,7 +40,7 @@ export function cardHTML(board) {
   let note = '';
   if (board.below.length) {
     const list = board.below.map(p => `<span><b>${esc(p.name)}</b> ${p.games} oyun</span>`).join(' · ');
-    note = `<div class="c-note">Sıralamaya girmek için en az ${MIN_GAMES} oyun: ${list}</div>`;
+    note = `<div class="c-note">Sıralamaya girmek için en az ${board.minGames} oyun: ${list}</div>`;
   }
 
   return `${head}
@@ -52,7 +52,7 @@ export function cardHTML(board) {
 
 function foot(isAna) {
   const rule = isAna
-    ? `Sıralama: kazanma oranı · en az ${MIN_GAMES} oyun`
+    ? `Sıralama: kazanma oranı · oyunların en az %${MIN_SHARE}'u`
     : 'Puan: 1. = 5 · 2. = 4 · 3. = 3 · diğer = 1 · son = 0';
   return `<footer class="c-foot"><span><b>${SITE_URL}</b></span><span>${rule}</span></footer>`;
 }

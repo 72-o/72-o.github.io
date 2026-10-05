@@ -351,8 +351,8 @@ function renderBoard(scope) {
         <span class="chev" aria-hidden="true">▸</span>Detaylı istatistikler</button>
     </div>
     ${boardTable(main, scope, true)}
-    ${below.length ? `<section class="block"><div class="block-head"><h2>${S.MIN_GAMES} oyundan az oynayanlar</h2></div>
-      <p class="dim" style="margin:0">En az ${S.MIN_GAMES} oyun oynayınca sıralamaya girerler.</p>
+    ${below.length ? `<section class="block"><div class="block-head"><h2>${board.minGames} oyundan az oynayanlar</h2></div>
+      <p class="dim" style="margin:0">En az ${board.minGames} oyun oynayınca sıralamaya girerler.</p>
       ${boardTable(below, scope, false)}</section>` : ''}`;
 
   view.querySelectorAll('[data-sort]').forEach(b => b.addEventListener('click', () => {
@@ -951,8 +951,8 @@ function renderYardim() {
       <p>Her sütun başlığına dokununca tablo o sütuna göre sıralanır, ikinci dokunuş sırayı ters çevirir. Şans farkı, Form ve Rating "Detaylı istatistikler" düğmesiyle açılıp kapanır.</p></section>
 
     <section><h2>Sıralamaya girme</h2>
-      <p>Sıralamaya girmek için en az <strong>${S.MIN_GAMES} oyun</strong> gerekir. Daha az oynayanlar tablonun altında ayrı listelenir. Bu, bir kez gelip kazanan birinin en üste çıkmasını önler.</p>
-      <p>Lig başında henüz <strong>${S.MIN_QUALIFIED} kişi</strong> ${S.MIN_GAMES} oyuna ulaşmamışsa herkes aynı tabloda sıralanır; eşik o kişi sayısına ulaşılınca kendiliğinden devreye girer.</p></section>
+      <p>Sıralamaya girmek için o tablodaki toplam oyunların en az <strong>%${S.MIN_SHARE}'unu</strong> oynamış olmak gerekir (yukarı yuvarlanır). Örneğin 10 oyunluk tabloda 3, 20 oyunlukta 6 oyun. Eşik her tablo için ayrı hesaplanır ve oyun sayısı arttıkça yükselir. Daha az oynayanlar tablonun altında ayrı listelenir. Bu, bir kez gelip kazanan birinin en üste çıkmasını önler.</p>
+      <p>Lig başında henüz <strong>${S.MIN_QUALIFIED} kişi</strong> eşiğe ulaşmamışsa herkes aynı tabloda sıralanır; eşik o kişi sayısına ulaşılınca kendiliğinden devreye girer.</p></section>
 
     <section><h2>Oyuncular ve nickler</h2>
       <p>Yeni biri geldiğinde önce <strong>Yeni Veri → Oyuncular</strong> bölümünden ismini ekle. Nick isteğe bağlı; tablolarda ve görsellerde nick görünür, nick boşsa isim görünür. Nick istediğin zaman <strong>Düzenle</strong> ile değiştirilebilir; geçmiş oyunlar etkilenmez. Hiç oyunu olmayan oyuncu silinebilir.</p></section>
