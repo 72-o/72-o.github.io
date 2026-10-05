@@ -2,11 +2,13 @@
   "version": 1,
   "players": [
     {"name":"Orhan","nick":"OBE"},
-    {"name":"Mete","nick":"MetOsimhen"}
+    {"name":"Mete","nick":"MetOsimhen"},
+    {"name":"Gökay"}
   ],
   "games": [],
   "log": [
     {"at":"2026-10-05T12:10:23.920Z","action":"player-add","after":{"name":"Orhan","nick":"OBE"}},
-    {"at":"2026-10-05T12:10:58.424Z","action":"player-add","after":{"name":"Mete","nick":"MetOsimhen"}}
+    {"at":"2026-10-05T12:10:58.424Z","action":"player-add","after":{"name":"Mete","nick":"MetOsimhen"}},
+    {"at":"2026-10-05T12:11:43.281Z","action":"player-add","after":{"name":"Gökay","nick":""}}
   ]
 }
