@@ -4,13 +4,15 @@
     {"name":"Orhan","nick":"OBE"},
     {"name":"Mete","nick":"MetOsimhen"},
     {"name":"Gökay"},
-    {"name":"Barış"}
+    {"name":"Barış"},
+    {"name":"Recep"}
   ],
   "games": [],
   "log": [
     {"at":"2026-10-05T12:10:23.920Z","action":"player-add","after":{"name":"Orhan","nick":"OBE"}},
     {"at":"2026-10-05T12:10:58.424Z","action":"player-add","after":{"name":"Mete","nick":"MetOsimhen"}},
     {"at":"2026-10-05T12:11:43.281Z","action":"player-add","after":{"name":"Gökay","nick":""}},
-    {"at":"2026-10-05T12:11:50.877Z","action":"player-add","after":{"name":"Barış","nick":""}}
+    {"at":"2026-10-05T12:11:50.877Z","action":"player-add","after":{"name":"Barış","nick":""}},
+    {"at":"2026-10-05T12:12:12.360Z","action":"player-add","after":{"name":"Recep","nick":""}}
   ]
 }
