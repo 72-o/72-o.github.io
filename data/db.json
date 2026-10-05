@@ -5,7 +5,8 @@
     {"name":"Mete","nick":"MetOsimhen"},
     {"name":"Gökay"},
     {"name":"Barış"},
-    {"name":"Recep"}
+    {"name":"Recep"},
+    {"name":"Doruk","nick":"D.S.K"}
   ],
   "games": [
     {"id":1,"date":"2026-10-01","players":["Recep","Gökay","Orhan","Mete","Barış"]}
@@ -16,6 +17,7 @@
     {"at":"2026-10-05T12:11:43.281Z","action":"player-add","after":{"name":"Gökay","nick":""}},
     {"at":"2026-10-05T12:11:50.877Z","action":"player-add","after":{"name":"Barış","nick":""}},
     {"at":"2026-10-05T12:12:12.360Z","action":"player-add","after":{"name":"Recep","nick":""}},
-    {"at":"2026-10-05T12:13:31.723Z","action":"add","id":1,"after":{"date":"2026-10-01","players":["Recep","Gökay","Orhan","Mete","Barış"]}}
+    {"at":"2026-10-05T12:13:31.723Z","action":"add","id":1,"after":{"date":"2026-10-01","players":["Recep","Gökay","Orhan","Mete","Barış"]}},
+    {"at":"2026-10-05T12:18:51.521Z","action":"player-add","after":{"name":"Doruk","nick":"D.S.K"}}
   ]
 }
