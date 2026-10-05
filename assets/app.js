@@ -344,17 +344,12 @@ function renderBoard(scope) {
     ? `Sıralama: ${isAna ? 'kazanma oranı' : 'lig puanı'}`
     : `Sıralama: ${SORT_LABEL[sort.key]} · <button type="button" class="link" data-act="reset-sort">varsayılana dön</button>`;
 
-  const note = board.fallback
-    ? `<p class="note">Eşik henüz devrede değil. En az ${S.MIN_GAMES} oyun oynayan ${S.MIN_QUALIFIED} kişi olunca, ${S.MIN_GAMES} oyundan az oynayanlar ayrı listelenecek.</p>`
-    : '';
-
   view.innerHTML = `${hero}${last}${sharePanel(scope)}
     <div class="toolbar">
       <p class="sorted">${sortedNote}</p>
       <button type="button" class="btn small toggle" data-act="detail" aria-expanded="${state.detail}">
         <span class="chev" aria-hidden="true">▸</span>Detaylı istatistikler</button>
     </div>
-    ${note}
     ${boardTable(main, scope, true)}
     ${below.length ? `<section class="block"><div class="block-head"><h2>${S.MIN_GAMES} oyundan az oynayanlar</h2></div>
       <p class="dim" style="margin:0">En az ${S.MIN_GAMES} oyun oynayınca sıralamaya girerler.</p>

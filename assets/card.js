@@ -38,9 +38,7 @@ export function cardHTML(board) {
     </div>`).join('');
 
   let note = '';
-  if (board.fallback) {
-    note = `<div class="c-note">Eşik henüz devrede değil: en az ${MIN_GAMES} oyun oynayan 3 kişi olunca devreye girer.</div>`;
-  } else if (board.below.length) {
+  if (board.below.length) {
     const list = board.below.map(p => `<span><b>${esc(p.name)}</b> ${p.games} oyun</span>`).join(' · ');
     note = `<div class="c-note">Sıralamaya girmek için en az ${MIN_GAMES} oyun: ${list}</div>`;
   }
