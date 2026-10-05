@@ -1,6 +1,10 @@
 {
   "version": 1,
-  "players": [],
+  "players": [
+    {"name":"Orhan","nick":"OBE"}
+  ],
   "games": [],
-  "log": []
+  "log": [
+    {"at":"2026-10-05T12:10:23.920Z","action":"player-add","after":{"name":"Orhan","nick":"OBE"}}
+  ]
 }
