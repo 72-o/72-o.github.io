@@ -10,7 +10,8 @@
     {"name":"Alper","nick":"AEK"}
   ],
   "games": [
-    {"id":1,"date":"2026-10-01","players":["Recep","Gökay","Orhan","Mete","Barış"]}
+    {"id":1,"date":"2026-10-01","players":["Recep","Gökay","Orhan","Mete","Barış"]},
+    {"id":2,"date":"2026-10-07","players":["Mete","Orhan","Alper","Doruk","Recep"]}
   ],
   "log": [
     {"at":"2026-10-05T12:10:23.920Z","action":"player-add","after":{"name":"Orhan","nick":"OBE"}},
@@ -20,6 +21,7 @@
     {"at":"2026-10-05T12:12:12.360Z","action":"player-add","after":{"name":"Recep","nick":""}},
     {"at":"2026-10-05T12:13:31.723Z","action":"add","id":1,"after":{"date":"2026-10-01","players":["Recep","Gökay","Orhan","Mete","Barış"]}},
     {"at":"2026-10-05T12:18:51.521Z","action":"player-add","after":{"name":"Doruk","nick":"D.S.K"}},
-    {"at":"2026-10-07T20:03:46.280Z","action":"player-add","after":{"name":"Alper","nick":"AEK"}}
+    {"at":"2026-10-07T20:03:46.280Z","action":"player-add","after":{"name":"Alper","nick":"AEK"}},
+    {"at":"2026-10-07T20:03:57.604Z","action":"add","id":2,"after":{"date":"2026-10-07","players":["Mete","Orhan","Alper","Doruk","Recep"]}}
   ]
 }
