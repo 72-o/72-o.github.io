@@ -34,7 +34,7 @@ body {
   min-height: 100vh;
 }
 a { color: var(--gold); }
-button, input, textarea { font: inherit; color: inherit; }
+button, input, select, textarea { font: inherit; color: inherit; }
 :focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 [hidden] { display: none !important; }
 
@@ -74,8 +74,8 @@ button, input, textarea { font: inherit; color: inherit; }
 @media (max-width: 720px) {
   .bar { flex-direction: column; align-items: stretch; gap: 0; padding: 0; }
   .brand { padding: 12px 16px 2px; font-size: 24px; }
-  .tabs { margin-left: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
-  .tab { justify-content: center; min-height: 48px; padding: 0 4px; font-size: 15px; }
+  .tabs { margin-left: 0; display: grid; grid-template-columns: repeat(5, auto); justify-content: space-between; gap: 0; padding: 0 8px; }
+  .tab { justify-content: center; min-height: 48px; padding: 0 6px; font-size: 15px; }
   .dd { display: block; }
   .dd-btn { width: 100%; }
   .dd-menu { position: fixed; left: 12px; right: 12px; top: auto; margin-top: 6px; }
@@ -189,7 +189,7 @@ th[aria-sort="ascending"] button::after { content: "▲"; }
 .field + .field { margin-top: 16px; }
 label, .label { font-size: 13px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--dim); }
 .hint { text-transform: none; letter-spacing: 0; font-weight: 500; color: var(--faint); }
-input[type="date"], input[type="password"], input[type="text"], textarea {
+input[type="date"], input[type="password"], input[type="text"], input[type="number"], input[type="time"], select, textarea {
   width: 100%; background: rgba(0, 0, 0, .25); border: 1px solid var(--hair); border-radius: 10px;
   padding: 10px 12px; font-size: 17px; color: var(--paper);
 }
@@ -275,6 +275,49 @@ input:focus, textarea:focus { border-color: var(--gold); outline: none; }
   .thumb { width: 140px; }
   .kpis { gap: 20px; }
   .kpis div { align-items: flex-start; }
+}
+
+/* ---------- Blindlar ---------- */
+.blind-form { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px 20px; }
+.blind-form .field + .field { margin-top: 0; }
+.blind-form .field.wide { grid-column: span 2; }
+.blind-form input, .blind-form select { min-height: 44px; }
+.blind-form select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--dim) 50%), linear-gradient(135deg, var(--dim) 50%, transparent 50%);
+  background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%; background-size: 5px 5px; background-repeat: no-repeat; padding-right: 32px; }
+.blind-form select option { background: #2e0811; }
+.blind-form .hint { font-size: 13px; }
+@media (max-width: 760px) {
+  .blind-form { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px 14px; }
+  .blind-form .field.wide, .blind-form .field:has(.seg) { grid-column: 1 / -1; }
+  .blind-form label .hint { display: none; }
+}
+.seg { display: flex; border: 1px solid var(--hair); border-radius: 10px; overflow: hidden; }
+.seg button { flex: 1; min-height: 44px; padding: 0 10px; background: rgba(0, 0, 0, .25); border: 0; border-left: 1px solid var(--hair); color: var(--dim); font-weight: 600; font-size: 15px; cursor: pointer; white-space: nowrap; }
+.seg button:first-child { border-left: 0; }
+.seg button small { font-weight: 500; font-size: 12px; opacity: .8; margin-left: 2px; }
+.seg button[aria-checked="true"] { background: var(--gold); color: #3a0a14; }
+.blind-kpis { flex-wrap: wrap; gap: 14px 36px; }
+.blind-kpis div { align-items: flex-start; }
+.blind-kpis dd { font-size: 40px; }
+.blinds td { font-family: var(--display); font-weight: 700; font-size: 22px; height: 48px; }
+.blinds td.lv { color: var(--dim); }
+.blinds td.tm { font-family: var(--body); font-weight: 600; font-size: 16px; }
+.blinds td.bl { font-size: 24px; }
+.blinds td.rs, .blinds td.dp { color: var(--dim); font-size: 19px; }
+.blinds td.dp .tag { font-family: var(--body); }
+.blinds tr.lead td { background: var(--solid-lead); }
+.blinds tr.lead td.bl { color: var(--gold); }
+.blinds tr.spare td { opacity: .55; }
+.tag:not(.new):not(.dup) { background: var(--panel-2); color: var(--dim); }
+@media (max-width: 560px) {
+  .blinds th, .blinds td { padding: 0 6px; }
+  .blinds thead th { font-size: 11px; letter-spacing: .04em; white-space: normal; line-height: 1.2; }
+  .blinds td { font-size: 19px; }
+  .blinds td.bl { font-size: 21px; }
+  .blinds td.tm { font-size: 14px; }
+  .blinds td.rs, .blinds td.dp { font-size: 16px; }
+  .blinds td.dp .tag { display: none; }
+  .blind-kpis dd { font-size: 32px; }
 }
 
 /* ---------- Yardım ---------- */

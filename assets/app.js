@@ -1,4 +1,5 @@
 import * as S from './stats.js';
+import * as B from './blinds.js';
 import { esc, LEAGUE_NAME } from './card.js';
 
 const REPO = '72-o/72-o.github.io';
@@ -6,6 +7,7 @@ const DATA_PATH = 'data/db.json';
 const API = `https://api.github.com/repos/${REPO}`;
 const LS_TOKEN = 'poker.token';
 const LS_DETAIL = 'poker.detail';
+const LS_BLINDS = 'poker.blinds';
 const GAMES_PREVIEW = 20;
 const HISTORY_PREVIEW = 30;
 
@@ -31,6 +33,7 @@ const state = {
   playerMsg: null,
   playerBusy: false,
   form: blankForm(),
+  blinds: loadBlinds(),
 };
 
 function emptyDb() {
@@ -39,6 +42,11 @@ function emptyDb() {
 
 function blankForm() {
   return { editId: null, date: today, order: [], busy: false, msg: null };
+}
+
+function loadBlinds() {
+  const base = { players: 6, stack: 10000, unit: 25, hours: 3, start: '', depth: 100, speed: 'normal' };
+  try { return { ...base, ...JSON.parse(lsGet(LS_BLINDS) || '{}') }; } catch { return base; }
 }
 
 // ---------- small helpers ----------
@@ -219,6 +227,7 @@ function render() {
   }
   if (route === 'yeni') return renderYeni();
   if (route === 'yardim') return renderYardim();
+  if (route === 'blind') return renderBlind();
   const scope = S.findScope(state.db, route, today);
   if (!scope) {
     view.innerHTML = `<div class="empty"><strong>Sayfa bulunamadı</strong><a href="#ana">Ana Tablo'ya dön</a></div>`;
@@ -919,6 +928,123 @@ async function setDeleted(id, deleted) {
   render();
 }
 
+// ---------- Blindlar ----------
+
+const HOURS = [1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 6];
+
+function hoursText(h) {
+  const whole = Math.floor(h);
+  return h % 1 ? `${whole} saat 30 dk` : `${whole} saat`;
+}
+
+function renderBlind() {
+  const b = state.blinds;
+  const seg = (name, options) => `<div class="seg" role="radiogroup">${options.map(o =>
+    `<button type="button" role="radio" aria-checked="${String(b[name]) === String(o.value)}" data-seg="${name}" data-val="${o.value}">${o.label}</button>`).join('')}</div>`;
+  view.innerHTML = `<section class="page-head">
+      <p class="eyebrow">Hesaplayıcı</p><h1>Blindlar</h1>
+      <p class="lede">Oyunun başında blind'lar kaç olsun, ne zaman ve ne kadar artsın? Masayı ve çipleri gir, akşamın blind tablosu çıksın.</p>
+    </section>
+    <section class="panel">
+      <div class="blind-form">
+        <div class="field"><label for="b-players">Oyuncu sayısı</label>
+          <input type="number" id="b-players" inputmode="numeric" min="2" max="30" step="1" value="${b.players}"></div>
+        <div class="field"><label for="b-stack">Kişi başı çip <span class="hint">· başlangıç stack'i</span></label>
+          <input type="number" id="b-stack" inputmode="numeric" min="1" step="1" value="${b.stack}"></div>
+        <div class="field"><label for="b-unit">En küçük çip</label>
+          <input type="number" id="b-unit" inputmode="numeric" min="1" step="1" value="${b.unit}"></div>
+        <div class="field"><label for="b-hours">Oyun süresi</label>
+          <select id="b-hours">${HOURS.map(h => `<option value="${h}"${h === b.hours ? ' selected' : ''}>${hoursText(h)}</option>`).join('')}</select></div>
+        <div class="field"><label for="b-start">Başlama saati <span class="hint">· isteğe bağlı</span></label>
+          <input type="time" id="b-start" value="${esc(b.start)}"></div>
+        <div class="field"><span class="label">Başlangıç derinliği</span>
+          ${seg('depth', B.DEPTHS.map(d => ({ value: d, label: `${d} BB` })))}
+          <span class="hint">100 BB daha çok beceri ve uzun oyun, 50 BB daha hızlı oyun.</span></div>
+        <div class="field wide"><span class="label">Artış hızı</span>
+          ${seg('speed', Object.entries(B.SPEEDS).map(([k, v]) => ({ value: k, label: `${v.label} <small>×${B.speedRatio(k).toFixed(2).replace('.', ',')}</small>` })))}
+          <span class="hint">Her seviyede blind'lar ortalama bu oranla çarpılır. Normal: sırayla ×1,5 ve ×4/3, yani iki seviyede bir ikiye katlanır.</span></div>
+      </div>
+    </section>
+    <div id="b-out"></div>
+    ${blindHelpHTML()}`;
+
+  const num = id => Number(document.getElementById(id).value);
+  const save = () => { lsSet(LS_BLINDS, JSON.stringify(b)); updateBlind(); };
+  [['b-players', 'players'], ['b-stack', 'stack'], ['b-unit', 'unit']].forEach(([id, key]) =>
+    document.getElementById(id).addEventListener('input', () => { b[key] = num(id); save(); }));
+  document.getElementById('b-hours').addEventListener('change', () => { b.hours = num('b-hours'); save(); });
+  document.getElementById('b-start').addEventListener('input', e => { b.start = e.target.value; save(); });
+  view.querySelectorAll('[data-seg]').forEach(btn => btn.addEventListener('click', () => {
+    const key = btn.dataset.seg;
+    b[key] = key === 'depth' ? Number(btn.dataset.val) : btn.dataset.val;
+    view.querySelectorAll(`[data-seg="${key}"]`).forEach(x => x.setAttribute('aria-checked', String(x === btn)));
+    save();
+  }));
+  updateBlind();
+}
+
+function blindPlanNow() {
+  const b = state.blinds;
+  return B.blindPlan({ players: b.players, stack: b.stack, unit: b.unit, hours: b.hours, depth: b.depth, speed: b.speed });
+}
+
+function updateBlind() {
+  const out = document.getElementById('b-out');
+  const b = state.blinds;
+  const plan = blindPlanNow();
+  if (plan.errors.length) {
+    out.innerHTML = `<ul class="issues">${plan.errors.map(e => `<li class="err">${esc(e)}</li>`).join('')}</ul>`;
+    return;
+  }
+  const target = plan.levels.find(l => l.kind === 'target');
+  const time = l => B.clock(b.start, l.at);
+  const rows = plan.levels.map(l => `<tr class="${l.kind === 'target' ? 'lead' : l.kind === 'spare' ? 'spare' : ''}">
+      <td class="lv">${l.no}</td>
+      <td class="tm">${time(l)}</td>
+      <td class="bl">${B.fmt(l.sb)}</td>
+      <td class="bl">${B.fmt(l.bb)}</td>
+      <td class="rs">${l.rise == null ? '–' : `+%${Math.round(l.rise * 100)}`}</td>
+      <td class="dp">${l.depth >= 10 ? Math.round(l.depth) : l.depth.toFixed(1).replace('.', ',')}${l.kind === 'target' ? '<span class="tag new">bitiş</span>' : l.kind === 'spare' ? '<span class="tag">yedek</span>' : ''}</td>
+    </tr>`).join('');
+  out.innerHTML = `<section class="block">
+      <dl class="kpis blind-kpis">
+        <div><dt>Başlangıç</dt><dd>${B.fmt(plan.startBB / 2)}/${B.fmt(plan.startBB)}</dd></div>
+        <div><dt>Seviye süresi</dt><dd>${plan.minutes} dk</dd></div>
+        <div><dt>Bitiş seviyesi</dt><dd>${target.no}.</dd></div>
+        <div><dt>Toplam çip</dt><dd>${B.fmt(plan.total)}</dd></div>
+      </dl>
+      <p class="dim" style="margin:0">Herkes ${Math.round(plan.realDepth)} BB ile başlar. Blind'lar ${plan.minutes} dakikada bir artar, ${target.no}. seviyede${b.start ? ` (${time(target)})` : ''} büyük blind ${B.fmt(target.bb)} olur: toplam çipin yaklaşık 1/${B.END_DIVISOR}'si. O noktada iki kişi kalsa bile kişi başı ortalama ${Math.round(plan.total / 2 / target.bb)} BB düşer, oyun birkaç el içinde biter. Uzarsa diye sonuna ${B.SPARE_LEVELS} yedek seviye eklendi. Seviye başına yaklaşık ${Math.round(plan.handsPerLevel)} el oynanır.</p>
+      ${plan.warnings.length ? `<ul class="issues" style="margin:0">${plan.warnings.map(w => `<li class="warn">${esc(w)}</li>`).join('')}</ul>` : ''}
+      <div class="table-wrap"><table class="blinds">
+        <thead><tr><th>Seviye</th><th>${b.start ? 'Saat' : 'Süre'}</th><th>Küçük blind</th><th>Büyük blind</th><th>Artış</th><th>Stack / BB</th></tr></thead>
+        <tbody>${rows}</tbody></table></div>
+      <p class="dim" style="margin:0;font-size:14px">Stack / BB: başlangıç stack'i o seviyede kaç büyük blind eder.${b.start ? '' : ' Süre, oyun başladıktan sonra geçen zamandır.'}</p>
+      <div class="share-actions"><button type="button" class="btn" data-act="blind-copy">Metni kopyala</button></div>
+    </section>`;
+  out.querySelector('[data-act="blind-copy"]').addEventListener('click', () => {
+    const lines = plan.levels.map(l => `${l.no}. ${time(l)} · ${B.fmt(l.sb)}/${B.fmt(l.bb)}${l.kind === 'target' ? ' (bitiş)' : l.kind === 'spare' ? ' (yedek)' : ''}`);
+    const text = `Blindlar · ${b.players} kişi × ${B.fmt(b.stack)} çip · ${plan.minutes} dk seviye\n${lines.join('\n')}`;
+    if (!navigator.clipboard) { toast('Bu tarayıcı kopyalamayı desteklemiyor.'); return; }
+    navigator.clipboard.writeText(text)
+      .then(() => toast('Kopyalandı. WhatsApp\'a yapıştırabilirsin.'), () => toast('Kopyalanamadı.'));
+  });
+}
+
+function blindHelpHTML() {
+  return `<section class="block help">
+      <h2>Nasıl hesaplanıyor</h2>
+      <p>Önemli olan blind'ların kendisi değil, herkesin kaç büyük blind'ı (BB) olduğu. Stack 20 BB'nin üstündeyken normal poker oynanır, 10 BB'nin altına inince oyun "all-in ya da fold"a döner. Blind yapısı, bu oranın akşam boyunca ne hızla düşeceğinin planıdır.</p>
+      <dl class="defs">
+        <dt>Başlangıç</dt><dd>Büyük blind = kişi başı çip ÷ başlangıç derinliği. Küçük blind büyüğün yarısı.</dd>
+        <dt>Bitiş</dt><dd>Toplam çip = oyuncu sayısı × kişi başı çip. Oyunun bitmesi istenen anda büyük blind ≈ toplam çip ÷ ${B.END_DIVISOR} olmalı.</dd>
+        <dt>Artış</dt><dd>Blind'lar toplanarak değil çarpılarak artar. 50→100→150→200 gibi sabit eklemek oyunu başta sert, sonda bitmez yapar; her seviyede ikiye katlamak da piyangoya çevirir.</dd>
+        <dt>Seviye sayısı</dt><dd>ln(oyuncu × derinlik ÷ ${B.END_DIVISOR}) ÷ ln(artış). Kişi başı çip bu formülde sadeleşir: 5.000 ya da 10.000 çip oyunun uzunluğunu değiştirmez, sadece rakamları ölçekler.</dd>
+        <dt>Seviye süresi</dt><dd>Hedef süre ÷ seviye sayısı.</dd>
+        <dt>Yuvarlama</dt><dd>Blind'lar 100, 150, 200, 300, 400, 600, 800 gibi yuvarlak değerlere oturur ve küçük blind her zaman en küçük çipin katıdır.</dd>
+      </dl>
+    </section>`;
+}
+
 // ---------- Yardım ----------
 
 function renderYardim() {
@@ -931,6 +1057,7 @@ function renderYardim() {
         <dt>Ana Tablo</dt><dd>Bütün zamanların tablosu. Hiç sıfırlanmaz, açılışta kazanma oranına göre sıralıdır.</dd>
         <dt>Ligler</dt><dd>Her lig 1 Ekim'de başlar, 30 Eylül'de biter. Yeni lig kendiliğinden açılır, geçmiş ligler menüde kalır. Açılışta lig puanına göre sıralıdır.</dd>
         <dt>Yeni Veri</dt><dd>Oyuncular ve nickleri, maç kaydı, bütün oyunların listesi, CSV ve değişiklik geçmişi.</dd>
+        <dt>Blindlar</dt><dd>Oyuncu sayısı, çipler ve hedef süreden başlangıç blind'larını ve ne zaman ne kadar artacaklarını hesaplar. Girdiğin değerler bu cihazda hatırlanır.</dd>
       </dl></section>
 
     <section><h2>Lig puanı</h2>
