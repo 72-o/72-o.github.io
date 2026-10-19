@@ -9,7 +9,8 @@
     {"name":"Doruk","nick":"D.S.K"},
     {"name":"Alper","nick":"AEK"},
     {"name":"Mehmet","nick":"MeÇo"},
-    {"name":"Anıl"}
+    {"name":"Anıl"},
+    {"name":"Mert"}
   ],
   "games": [
     {"id":1,"date":"2026-10-01","players":["Recep","Gökay","Orhan","Mete","Barış"]},
@@ -26,6 +27,7 @@
     {"at":"2026-10-07T20:03:46.280Z","action":"player-add","after":{"name":"Alper","nick":"AEK"}},
     {"at":"2026-10-07T20:03:57.604Z","action":"add","id":2,"after":{"date":"2026-10-07","players":["Mete","Orhan","Alper","Doruk","Recep"]}},
     {"at":"2026-10-19T08:53:59.758Z","action":"player-add","after":{"name":"Mehmet","nick":"MeÇo"}},
-    {"at":"2026-10-19T08:54:11.082Z","action":"player-add","after":{"name":"Anıl","nick":""}}
+    {"at":"2026-10-19T08:54:11.082Z","action":"player-add","after":{"name":"Anıl","nick":""}},
+    {"at":"2026-10-19T08:54:23.495Z","action":"player-add","after":{"name":"Mert","nick":""}}
   ]
 }
