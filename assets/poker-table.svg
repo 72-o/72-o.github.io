@@ -1,31 +1,35 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 420">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 320">
   <defs>
-    <radialGradient id="wood" cx="50%" cy="38%" r="75%">
+    <linearGradient id="wood" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="#8a5a35"/>
-      <stop offset="60%" stop-color="#6b4225"/>
+      <stop offset="55%" stop-color="#6b4225"/>
       <stop offset="100%" stop-color="#4a2c18"/>
-    </radialGradient>
-    <radialGradient id="rail" cx="50%" cy="35%" r="70%">
+    </linearGradient>
+    <linearGradient id="rail" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="#a06a3c"/>
       <stop offset="100%" stop-color="#5c3821"/>
-    </radialGradient>
-    <radialGradient id="felt" cx="50%" cy="35%" r="75%">
+    </linearGradient>
+    <radialGradient id="felt" cx="50%" cy="32%" r="85%">
       <stop offset="0%" stop-color="#6d1526"/>
       <stop offset="55%" stop-color="#520f1d"/>
       <stop offset="100%" stop-color="#3a0a14"/>
     </radialGradient>
     <linearGradient id="sheen" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#fff6ee" stop-opacity=".16"/>
-      <stop offset="40%" stop-color="#fff6ee" stop-opacity="0"/>
+      <stop offset="0%" stop-color="#fff6ee" stop-opacity=".14"/>
+      <stop offset="45%" stop-color="#fff6ee" stop-opacity="0"/>
     </linearGradient>
   </defs>
 
-  <ellipse cx="300" cy="216" rx="296" ry="196" fill="#000" opacity=".35"/>
-  <ellipse cx="300" cy="210" rx="294" ry="194" fill="url(#wood)"/>
-  <ellipse cx="300" cy="210" rx="294" ry="194" fill="none" stroke="#2d1a0f" stroke-width="3"/>
-  <ellipse cx="300" cy="210" rx="256" ry="168" fill="url(#rail)"/>
-  <ellipse cx="300" cy="208" rx="222" ry="142" fill="#3a2212"/>
-  <ellipse cx="300" cy="206" rx="214" ry="135" fill="url(#felt)"/>
-  <ellipse cx="300" cy="206" rx="214" ry="135" fill="none" stroke="#f3c65a" stroke-opacity=".3" stroke-width="2"/>
-  <ellipse cx="300" cy="186" rx="294" ry="120" fill="url(#sheen)"/>
+  <!-- drop shadow -->
+  <rect x="6" y="14" width="668" height="296" rx="148" fill="#000" opacity=".35"/>
+  <!-- wood rail (rectangular with fully rounded left/right ends, like a real poker table) -->
+  <rect x="2" y="2" width="676" height="300" rx="150" fill="url(#wood)" stroke="#2d1a0f" stroke-width="3"/>
+  <rect x="20" y="18" width="640" height="268" rx="134" fill="url(#rail)"/>
+  <!-- inner groove -->
+  <rect x="42" y="36" width="596" height="232" rx="116" fill="#3a2212"/>
+  <!-- felt playing surface -->
+  <rect x="50" y="42" width="580" height="220" rx="110" fill="url(#felt)"/>
+  <rect x="50" y="42" width="580" height="220" rx="110" fill="none" stroke="#f3c65a" stroke-opacity=".3" stroke-width="2"/>
+  <!-- light sheen across the top of the felt -->
+  <rect x="50" y="42" width="580" height="140" rx="70" fill="url(#sheen)"/>
 </svg>

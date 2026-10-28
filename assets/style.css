@@ -299,6 +299,7 @@ input:focus, textarea:focus { border-color: var(--gold); outline: none; }
 .plegend { display: flex; gap: 18px; margin: 10px 0 4px; font-size: 13px; font-weight: 600; color: var(--dim); }
 .plegend .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; border: 2px solid var(--hair); }
 .plegend .dot.win { background: rgba(243, 198, 90, .25); border-color: var(--gold); }
+.plegend .dot.third { background: rgba(232, 160, 106, .25); border-color: var(--bronze); }
 .plegend .dot.loser { background: rgba(224, 227, 231, .12); border-color: var(--silver); }
 .goyun-grid { margin-top: 6px; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
 .gcard { background: var(--solid); border: 1px solid var(--hair); border-radius: 14px; padding: 14px 16px 18px; }
@@ -307,7 +308,7 @@ input:focus, textarea:focus { border-color: var(--gold); outline: none; }
 .gcard-lig { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--gold); }
 
 /* a wood-railed poker table seen from above, players seated clockwise in finishing order */
-.ptable { position: relative; width: 100%; aspect-ratio: 5 / 4; margin-top: 6px; }
+.ptable { position: relative; width: 100%; aspect-ratio: 17 / 8; margin-top: 6px; }
 .ptable-bg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .ptable-felt {
   position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
@@ -330,10 +331,12 @@ input:focus, textarea:focus { border-color: var(--gold); outline: none; }
 .pseat .pt small { font-family: var(--body); font-weight: 500; font-size: 10px; color: var(--dim); margin-left: 1px; }
 .pseat.win .av { border-color: var(--gold); background: rgba(243, 198, 90, .2); color: var(--gold); box-shadow: 0 0 0 4px rgba(243, 198, 90, .15); }
 .pseat.win .nm { color: var(--gold); }
+.pseat.third .av { border-color: var(--bronze); background: rgba(232, 160, 106, .2); color: var(--bronze); box-shadow: 0 0 0 4px rgba(232, 160, 106, .15); }
+.pseat.third .nm { color: var(--bronze); }
 .pseat.loser .av { border-color: var(--silver); color: var(--silver); }
 @media (max-width: 560px) {
   .goyun-grid { grid-template-columns: 1fr; }
-  .ptable { aspect-ratio: 1 / 1; }
+  .ptable { aspect-ratio: 11 / 7; }
   .pseat { width: 58px; }
   .pseat .av { width: 28px; height: 28px; font-size: 13px; }
   .pseat .nm { font-size: 11px; max-width: 58px; }

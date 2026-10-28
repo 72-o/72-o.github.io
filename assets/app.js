@@ -965,7 +965,7 @@ function pokerTableHTML(g, nk) {
     const pts = S.pointsFor(place, n);
     const disp = S.displayName(name, nk);
     const pos = seatPos(i, n);
-    const cls = place === 1 ? ' win' : S.isFirstLoser(place, n) ? ' loser' : '';
+    const cls = place === 1 ? ' win' : place === 3 ? ' third' : S.isFirstLoser(place, n) ? ' loser' : '';
     return `<div class="pseat${cls}" style="left:${pos.x.toFixed(1)}%;top:${pos.y.toFixed(1)}%">
         <span class="av">${place}</span>
         <span class="nm">${esc(disp)}</span>
@@ -1001,7 +1001,7 @@ function renderOyunlar() {
 
   let body;
   if (gv === 'grid') {
-    const legend = `<div class="plegend"><span><i class="dot win"></i>Kazanan</span><span><i class="dot loser"></i>İlk kaybeden</span></div>`;
+    const legend = `<div class="plegend"><span><i class="dot win"></i>Kazanan</span><span><i class="dot third"></i>3.</span><span><i class="dot loser"></i>İlk kaybeden</span></div>`;
     body = `${legend}<div class="goyun-grid">${games.map(g => `
       <article class="gcard">
         <div class="gcard-head">
