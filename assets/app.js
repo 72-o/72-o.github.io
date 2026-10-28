@@ -35,7 +35,7 @@ const state = {
   playerBusy: false,
   form: blankForm(),
   blinds: loadBlinds(),
-  gamesView: lsGet(LS_GAMEVIEW) === 'grid' ? 'grid' : 'table',
+  gamesView: lsGet(LS_GAMEVIEW) === 'table' ? 'table' : 'grid',
 };
 
 function emptyDb() {
