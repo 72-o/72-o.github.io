@@ -972,7 +972,11 @@ function pokerTableHTML(g, nk) {
         <span class="pt">${pts}<small>p</small></span>
       </div>`;
   }).join('');
-  return `<div class="ptable"><div class="ptable-felt"><span>${n}<small>kişi</small></span></div>${seats}</div>`;
+  return `<div class="ptable">
+      <img class="ptable-bg" src="assets/poker-table.svg" alt="" aria-hidden="true">
+      <div class="ptable-felt"><span>${n}<small>kişi</small></span></div>
+      ${seats}
+    </div>`;
 }
 
 function renderOyunlar() {

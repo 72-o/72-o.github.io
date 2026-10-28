@@ -306,14 +306,11 @@ input:focus, textarea:focus { border-color: var(--gold); outline: none; }
 .gcard-date { font-family: var(--display); font-weight: 800; font-size: 18px; }
 .gcard-lig { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--gold); }
 
-/* a felt table seen from above, players seated clockwise in finishing order */
+/* a wood-railed poker table seen from above, players seated clockwise in finishing order */
 .ptable { position: relative; width: 100%; aspect-ratio: 5 / 4; margin-top: 6px; }
+.ptable-bg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .ptable-felt {
   position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
-  width: 56%; height: 52%; border-radius: 50%;
-  background: radial-gradient(ellipse at 50% 40%, #2d5a3d, #1d3d29 75%);
-  border: 3px solid rgba(255, 246, 238, .18);
-  box-shadow: inset 0 0 20px rgba(0, 0, 0, .45), 0 3px 10px rgba(0, 0, 0, .3);
   display: grid; place-items: center;
 }
 .ptable-felt span { font-family: var(--display); font-weight: 800; font-size: 22px; color: rgba(255, 246, 238, .5); line-height: 1; text-align: center; }
@@ -324,11 +321,12 @@ input:focus, textarea:focus { border-color: var(--gold); outline: none; }
 }
 .pseat .av {
   width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center;
-  background: var(--panel-2); border: 2px solid var(--hair); color: var(--dim);
+  background: #1f050b; border: 2px solid var(--hair); color: var(--paper);
   font-family: var(--display); font-weight: 800; font-size: 15px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .4);
 }
-.pseat .nm { font-size: 12px; font-weight: 600; line-height: 1.15; max-width: 72px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.pseat .pt { font-family: var(--display); font-weight: 700; font-size: 12px; color: var(--gold); }
+.pseat .nm { font-size: 12px; font-weight: 600; line-height: 1.15; max-width: 72px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-shadow: 0 1px 3px rgba(0, 0, 0, .6); }
+.pseat .pt { font-family: var(--display); font-weight: 700; font-size: 12px; color: var(--gold); text-shadow: 0 1px 3px rgba(0, 0, 0, .6); }
 .pseat .pt small { font-family: var(--body); font-weight: 500; font-size: 10px; color: var(--dim); margin-left: 1px; }
 .pseat.win .av { border-color: var(--gold); background: rgba(243, 198, 90, .2); color: var(--gold); box-shadow: 0 0 0 4px rgba(243, 198, 90, .15); }
 .pseat.win .nm { color: var(--gold); }
