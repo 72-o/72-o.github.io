@@ -949,6 +949,7 @@ function placeClass(place, n) {
 }
 
 const PLACE_TAG = { win: 'kazanan', second: '2.', third: '3.', loser: 'ilk kaybeden' };
+const PLACE_ICON = { win: '👑', second: '🥈', third: '🥉', loser: '💩' };
 
 function gameRankHTML(g, nk) {
   const n = g.players.length;
@@ -966,7 +967,7 @@ function gameRankHTML(g, nk) {
 // Seats laid out clockwise around an oval, starting at 12 o'clock, winner first.
 function seatPos(i, n) {
   const angle = (-90 + (360 * i) / n) * Math.PI / 180;
-  return { x: 50 + 45 * Math.cos(angle), y: 50 + 42 * Math.sin(angle) };
+  return { x: 50 + 47 * Math.cos(angle), y: 50 + 44 * Math.sin(angle) };
 }
 
 function pokerTableHTML(g, nk) {
@@ -977,8 +978,9 @@ function pokerTableHTML(g, nk) {
     const disp = S.displayName(name, nk);
     const pos = seatPos(i, n);
     const cls = placeClass(place, n);
+    const icon = PLACE_ICON[cls] || '';
     return `<div class="pseat${cls ? ` ${cls}` : ''}" style="left:${pos.x.toFixed(1)}%;top:${pos.y.toFixed(1)}%">
-        <span class="av">${place}</span>
+        <span class="av-wrap"><span class="av">${place}</span>${icon ? `<span class="picon" aria-hidden="true">${icon}</span>` : ''}</span>
         <span class="nm">${esc(disp)}</span>
         <span class="pt">${pts}<small>p</small></span>
       </div>`;
@@ -1012,7 +1014,7 @@ function renderOyunlar() {
 
   let body;
   if (gv === 'grid') {
-    const legend = `<div class="plegend"><span><i class="dot win"></i>Kazanan</span><span><i class="dot second"></i>2.</span><span><i class="dot third"></i>3.</span><span><i class="dot loser"></i>İlk kaybeden</span></div>`;
+    const legend = `<div class="plegend"><span>👑 Kazanan</span><span>🥈 2.</span><span>🥉 3.</span><span>💩 İlk kaybeden</span></div>`;
     body = `${legend}<div class="goyun-grid">${games.map(g => `
       <article class="gcard">
         <div class="gcard-head">
