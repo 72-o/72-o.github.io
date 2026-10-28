@@ -952,6 +952,29 @@ function gameRankHTML(g, nk) {
   return `<ol class="glist">${items}</ol>`;
 }
 
+// Seats laid out clockwise around an oval, starting at 12 o'clock, winner first.
+function seatPos(i, n) {
+  const angle = (-90 + (360 * i) / n) * Math.PI / 180;
+  return { x: 50 + 45 * Math.cos(angle), y: 50 + 42 * Math.sin(angle) };
+}
+
+function pokerTableHTML(g, nk) {
+  const n = g.players.length;
+  const seats = g.players.map((name, i) => {
+    const place = i + 1;
+    const pts = S.pointsFor(place, n);
+    const disp = S.displayName(name, nk);
+    const pos = seatPos(i, n);
+    const cls = place === 1 ? ' win' : S.isFirstLoser(place, n) ? ' loser' : '';
+    return `<div class="pseat${cls}" style="left:${pos.x.toFixed(1)}%;top:${pos.y.toFixed(1)}%">
+        <span class="av">${place}</span>
+        <span class="nm">${esc(disp)}</span>
+        <span class="pt">${pts}<small>p</small></span>
+      </div>`;
+  }).join('');
+  return `<div class="ptable"><div class="ptable-felt"><span>${n}<small>kişi</small></span></div>${seats}</div>`;
+}
+
 function renderOyunlar() {
   const nk = nicks();
   const games = S.activeGames(state.db).slice().reverse();
@@ -959,7 +982,7 @@ function renderOyunlar() {
 
   const head = `<section class="page-head">
       <p class="eyebrow">Geçmiş</p><h1>Oyunlar</h1>
-      <p class="lede">Her oyunun tam sıralaması, kim kazandı, kim ilk kaybeden oldu — hepsi burada. Tablo ya da kart görünümüyle incele.</p>
+      <p class="lede">Her oyunun tam sıralaması, kim kazandı, kim ilk kaybeden oldu — hepsi burada. Tablo ya da masa görünümüyle incele.</p>
     </section>`;
 
   if (!games.length) {
@@ -969,18 +992,19 @@ function renderOyunlar() {
 
   const toggle = `<div class="view-toggle" role="radiogroup" aria-label="Görünüm">
       <button type="button" role="radio" aria-checked="${gv === 'table'}" data-view="table">Tablo</button>
-      <button type="button" role="radio" aria-checked="${gv === 'grid'}" data-view="grid">Kart</button>
+      <button type="button" role="radio" aria-checked="${gv === 'grid'}" data-view="grid">Masa</button>
     </div>`;
 
   let body;
   if (gv === 'grid') {
-    body = `<div class="goyun-grid">${games.map(g => `
+    const legend = `<div class="plegend"><span><i class="dot win"></i>Kazanan</span><span><i class="dot loser"></i>İlk kaybeden</span></div>`;
+    body = `${legend}<div class="goyun-grid">${games.map(g => `
       <article class="gcard">
         <div class="gcard-head">
           <span class="gcard-date">${S.formatDate(g.date)}</span>
           <span class="gcard-lig">${esc(S.ligLabel(S.ligKey(g.date)).replace('–', ' – '))}</span>
         </div>
-        ${gameRankHTML(g, nk)}
+        ${pokerTableHTML(g, nk)}
       </article>`).join('')}</div>`;
   } else {
     const rows = games.map(g => `<tr>
