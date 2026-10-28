@@ -13,6 +13,7 @@
   --gold: #f3c65a;
   --silver: #e0e3e7;
   --bronze: #e8a06a;
+  --loser: #b48be0;
   --ok: #a5e3b8;
   --bad: #ffa194;
   --display: 'Big Shoulders Display', 'Arial Narrow', sans-serif;
@@ -218,7 +219,9 @@ input:focus, textarea:focus { border-color: var(--gold); outline: none; }
 .tag.new { background: rgba(243, 198, 90, .18); color: var(--gold); }
 .tag.dup { background: rgba(255, 161, 148, .18); color: var(--bad); }
 .tag.win { background: rgba(243, 198, 90, .18); color: var(--gold); }
-.tag.loser { background: rgba(224, 227, 231, .14); color: var(--silver); }
+.tag.second { background: rgba(224, 227, 231, .16); color: var(--silver); }
+.tag.third { background: rgba(232, 160, 106, .18); color: var(--bronze); }
+.tag.loser { background: rgba(180, 139, 224, .16); color: var(--loser); }
 .newbox { margin-top: 14px; padding: 14px; border-radius: 12px; background: rgba(243, 198, 90, .08); border: 1px solid rgba(243, 198, 90, .3); display: flex; flex-direction: column; gap: 10px; }
 .newbox p { margin: 0; }
 .suggest { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 15px; }
@@ -292,15 +295,18 @@ input:focus, textarea:focus { border-color: var(--gold); outline: none; }
 .glist .pt { font-family: var(--display); font-weight: 700; font-size: 15px; color: var(--gold); flex: none; }
 .glist .pt small { font-family: var(--body); font-size: 11px; color: var(--dim); font-weight: 500; margin-left: 3px; }
 .glist li.win .pl, .glist li.win .nm { color: var(--gold); }
-.glist li.loser .nm { color: var(--dim); }
+.glist li.second .pl, .glist li.second .nm { color: var(--silver); }
+.glist li.third .pl, .glist li.third .nm { color: var(--bronze); }
+.glist li.loser .nm { color: var(--loser); }
 .glist .tag { margin-left: 6px; font-size: 10px; padding: 0 6px; vertical-align: 1px; }
 
 .oyunlar-table td.order { padding-block: 10px; }
 .plegend { display: flex; gap: 18px; margin: 10px 0 4px; font-size: 13px; font-weight: 600; color: var(--dim); }
 .plegend .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; border: 2px solid var(--hair); }
 .plegend .dot.win { background: rgba(243, 198, 90, .25); border-color: var(--gold); }
+.plegend .dot.second { background: rgba(224, 227, 231, .2); border-color: var(--silver); }
 .plegend .dot.third { background: rgba(232, 160, 106, .25); border-color: var(--bronze); }
-.plegend .dot.loser { background: rgba(224, 227, 231, .12); border-color: var(--silver); }
+.plegend .dot.loser { background: rgba(180, 139, 224, .2); border-color: var(--loser); }
 .goyun-grid { margin-top: 6px; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
 .gcard { background: var(--solid); border: 1px solid var(--hair); border-radius: 14px; padding: 14px 16px 18px; }
 .gcard-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--hair); }
@@ -331,9 +337,12 @@ input:focus, textarea:focus { border-color: var(--gold); outline: none; }
 .pseat .pt small { font-family: var(--body); font-weight: 500; font-size: 10px; color: var(--dim); margin-left: 1px; }
 .pseat.win .av { border-color: var(--gold); background: rgba(243, 198, 90, .2); color: var(--gold); box-shadow: 0 0 0 4px rgba(243, 198, 90, .15); }
 .pseat.win .nm { color: var(--gold); }
+.pseat.second .av { border-color: var(--silver); background: rgba(224, 227, 231, .2); color: var(--silver); box-shadow: 0 0 0 4px rgba(224, 227, 231, .15); }
+.pseat.second .nm { color: var(--silver); }
 .pseat.third .av { border-color: var(--bronze); background: rgba(232, 160, 106, .2); color: var(--bronze); box-shadow: 0 0 0 4px rgba(232, 160, 106, .15); }
 .pseat.third .nm { color: var(--bronze); }
-.pseat.loser .av { border-color: var(--silver); color: var(--silver); }
+.pseat.loser .av { border-color: var(--loser); background: rgba(180, 139, 224, .2); color: var(--loser); box-shadow: 0 0 0 4px rgba(180, 139, 224, .15); }
+.pseat.loser .nm { color: var(--loser); }
 @media (max-width: 560px) {
   .goyun-grid { grid-template-columns: 1fr; }
   .ptable { aspect-ratio: 11 / 7; }

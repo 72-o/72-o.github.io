@@ -939,15 +939,26 @@ async function setDeleted(id, deleted) {
 
 // ---------- Oyunlar (geçmiş oyunlar) ----------
 
+// Podium/first-loser class shared by the games list and the poker-table seats.
+function placeClass(place, n) {
+  if (place === 1) return 'win';
+  if (place === 2) return 'second';
+  if (place === 3) return 'third';
+  if (S.isFirstLoser(place, n)) return 'loser';
+  return '';
+}
+
+const PLACE_TAG = { win: 'kazanan', second: '2.', third: '3.', loser: 'ilk kaybeden' };
+
 function gameRankHTML(g, nk) {
   const n = g.players.length;
   const items = g.players.map((name, i) => {
     const place = i + 1;
     const pts = S.pointsFor(place, n);
     const disp = S.displayName(name, nk);
-    const cls = place === 1 ? ' win' : S.isFirstLoser(place, n) ? ' loser' : '';
-    const tag = place === 1 ? '<span class="tag win">kazanan</span>' : S.isFirstLoser(place, n) ? '<span class="tag loser">ilk kaybeden</span>' : '';
-    return `<li class="${cls.trim()}"><span class="pl">${place}</span><span class="nm">${esc(disp)}${tag}</span><span class="pt">${pts}<small>puan</small></span></li>`;
+    const cls = placeClass(place, n);
+    const tag = cls ? `<span class="tag ${cls}">${PLACE_TAG[cls]}</span>` : '';
+    return `<li class="${cls}"><span class="pl">${place}</span><span class="nm">${esc(disp)}${tag}</span><span class="pt">${pts}<small>puan</small></span></li>`;
   }).join('');
   return `<ol class="glist">${items}</ol>`;
 }
@@ -965,8 +976,8 @@ function pokerTableHTML(g, nk) {
     const pts = S.pointsFor(place, n);
     const disp = S.displayName(name, nk);
     const pos = seatPos(i, n);
-    const cls = place === 1 ? ' win' : place === 3 ? ' third' : S.isFirstLoser(place, n) ? ' loser' : '';
-    return `<div class="pseat${cls}" style="left:${pos.x.toFixed(1)}%;top:${pos.y.toFixed(1)}%">
+    const cls = placeClass(place, n);
+    return `<div class="pseat${cls ? ` ${cls}` : ''}" style="left:${pos.x.toFixed(1)}%;top:${pos.y.toFixed(1)}%">
         <span class="av">${place}</span>
         <span class="nm">${esc(disp)}</span>
         <span class="pt">${pts}<small>p</small></span>
@@ -1001,7 +1012,7 @@ function renderOyunlar() {
 
   let body;
   if (gv === 'grid') {
-    const legend = `<div class="plegend"><span><i class="dot win"></i>Kazanan</span><span><i class="dot third"></i>3.</span><span><i class="dot loser"></i>İlk kaybeden</span></div>`;
+    const legend = `<div class="plegend"><span><i class="dot win"></i>Kazanan</span><span><i class="dot second"></i>2.</span><span><i class="dot third"></i>3.</span><span><i class="dot loser"></i>İlk kaybeden</span></div>`;
     body = `${legend}<div class="goyun-grid">${games.map(g => `
       <article class="gcard">
         <div class="gcard-head">
