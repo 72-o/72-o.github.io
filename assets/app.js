@@ -359,7 +359,7 @@ function renderBoard(scope) {
       <ol>${board.last.players.map((n, i) => `<li><b>${i + 1}</b>${esc(n)}</li>`).join('')}</ol></section>`;
 
   const sortedNote = sort.key === S.defaultSortKey(scope) && sort.dir === 'desc'
-    ? `Sıralama: ${isAna ? 'kazanma oranı' : 'lig puanı'}`
+    ? `Sıralama: ${isAna ? 'toplam puan' : 'lig puanı'}`
     : `Sıralama: ${SORT_LABEL[sort.key]} · <button type="button" class="link" data-act="reset-sort">varsayılana dön</button>`;
 
   view.innerHTML = `${hero}${last}${sharePanel(scope)}
@@ -1156,7 +1156,7 @@ function renderYardim() {
 
     <section><h2>Sekmeler</h2>
       <dl class="defs">
-        <dt>Ana Tablo</dt><dd>Bütün zamanların tablosu. Hiç sıfırlanmaz, açılışta kazanma oranına göre sıralıdır.</dd>
+        <dt>Ana Tablo</dt><dd>Bütün zamanların tablosu. Hiç sıfırlanmaz, açılışta toplam puana göre sıralıdır.</dd>
         <dt>Ligler</dt><dd>Her lig 1 Ekim'de başlar, 30 Eylül'de biter. Yeni lig kendiliğinden açılır, geçmiş ligler menüde kalır. Açılışta lig puanına göre sıralıdır.</dd>
         <dt>Oyunlar</dt><dd>Oynanmış her oyunun tam sıralaması; tablo ya da kart görünümüyle. Kazanan ve ilk kaybeden işaretlenir.</dd>
         <dt>Yeni Veri</dt><dd>Oyuncular ve nickleri, maç kaydı, bütün oyunların listesi, CSV ve değişiklik geçmişi.</dd>
@@ -1165,7 +1165,7 @@ function renderYardim() {
 
     <section><h2>Lig puanı</h2>
       <ul class="pts"><li><b>N</b>1.</li><li><b>N−2</b>2.</li><li><b>N−4</b>3.</li><li><b>0</b>diğerleri</li></ul>
-      <p>Puan, oyuncu sayısına (N) göre ölçeklenir: 10 kişilik bir oyunu kazanmak, 5 kişilik bir oyunu kazanmaktan daha değerlidir. Kazanan N puan alır, 2. N−2, 3. N−4 (hiç negatif olmaz), geri kalanlar puan almaz. Puanlar ligin bütün oyunlarında toplanır. Puan eşitse önce 1.lik, sonra 2.lik, sonra 3.lük sayısı fazla olan öne geçer.</p>
+      <p>Puan, oyuncu sayısına (N) göre ölçeklenir: 10 kişilik bir oyunu kazanmak, 5 kişilik bir oyunu kazanmaktan daha değerlidir. Kazanan N puan alır, 2. N−2, 3. N−4 (hiç negatif olmaz), geri kalanlar puan almaz. Puanlar, ligin (ya da Ana Tablo'da bütün zamanların) tüm oyunlarında toplanır ve her iki tablo da açılışta bu puana göre sıralıdır. Puan eşitse önce 1.lik, sonra 2.lik, sonra 3.lük sayısı fazla olan öne geçer.</p>
       <p><strong>İlk kaybeden:</strong> podyuma en yakın ama giremeyen, yani 4. sırada bitiren oyuncu. Puan almaz ama "Detaylı istatistikler" ve <a href="#oyunlar">Oyunlar</a> sayfasında ayrıca işaretlenir.</p></section>
 
     <section><h2>Sütunlar</h2>

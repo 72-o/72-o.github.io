@@ -250,8 +250,8 @@ export const SORT_KEYS = {
   rating: p => p.rating,
 };
 
-export function defaultSortKey(scope) {
-  return scope.type === 'ana' ? 'winPct' : 'points';
+export function defaultSortKey() {
+  return 'points';
 }
 
 function tieBreaks(scope) {

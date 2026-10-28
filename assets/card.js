@@ -1,5 +1,5 @@
 // Builds the share image markup for one board. Used by card.html (screenshotted by the build).
-import { MIN_SHARE, formatDate, fmtPct } from './stats.js';
+import { MIN_SHARE, formatDate } from './stats.js';
 
 export const LEAGUE_NAME = 'Poker Ligi';
 export const SITE_URL = '72-o.github.io';
@@ -27,14 +27,14 @@ export function cardHTML(board) {
   const th = `<div class="c-th">
       <span></span><span>Oyuncu</span><span class="c-g">Oyun</span>
       ${[1, 2, 3].map(i => `<span class="c-m"><span class="mh" style="--c:${MEDALS[i - 1]}">${i}.</span></span>`).join('')}
-      <span class="c-s">${isAna ? 'Kazanma' : 'Puan'}</span>
+      <span class="c-s">Puan</span>
     </div>`;
   const rows = board.main.map((p, i) => `<div class="c-row${i === 0 ? ' lead' : ''}">
       <span class="c-rank${i < 3 ? ' top' : ''}" style="--c:${MEDALS[i] || 'inherit'}">${i + 1}</span>
       <span class="c-name">${esc(p.name)}</span>
       <span class="c-g">${p.games}</span>
       ${[p.p1, p.p2, p.p3].map(x => `<span class="c-m${x ? '' : ' zero'}">${x || '–'}</span>`).join('')}
-      <span class="c-s">${isAna ? fmtPct(p.winPct) : p.points}</span>
+      <span class="c-s">${p.points}</span>
     </div>`).join('');
 
   let note = '';
@@ -51,9 +51,7 @@ export function cardHTML(board) {
 }
 
 function foot(isAna) {
-  const rule = isAna
-    ? `Sıralama: kazanma oranı · oyunların en az %${MIN_SHARE}'u`
-    : 'Puan: 1. = N · 2. = N−2 · 3. = N−4 · diğer = 0 (N = oyuncu sayısı)';
+  const rule = `Puan: 1. = N · 2. = N−2 · 3. = N−4 · diğer = 0 (N = oyuncu sayısı)${isAna ? ` · oyunların en az %${MIN_SHARE}'u` : ''}`;
   return `<footer class="c-foot"><span><b>${SITE_URL}</b></span><span>${rule}</span></footer>`;
 }
 
