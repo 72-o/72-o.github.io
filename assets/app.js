@@ -970,8 +970,15 @@ function seatPos(i, n) {
   return { x: 50 + 47 * Math.cos(angle), y: 50 + 44 * Math.sin(angle) };
 }
 
+// Bigger tables seat more people in the same ellipse, so seats shrink a bit past 6 players
+// to keep them from overlapping each other.
+function seatScale(n) {
+  return Math.max(0.6, Math.min(1, 6 / n));
+}
+
 function pokerTableHTML(g, nk) {
   const n = g.players.length;
+  const scale = seatScale(n);
   const seats = g.players.map((name, i) => {
     const place = i + 1;
     const pts = S.pointsFor(place, n);
@@ -985,7 +992,7 @@ function pokerTableHTML(g, nk) {
         <span class="pt">${pts}<small>p</small></span>
       </div>`;
   }).join('');
-  return `<div class="ptable">
+  return `<div class="ptable" style="--s:${scale.toFixed(2)}">
       <img class="ptable-bg" src="assets/poker-table.svg" alt="" aria-hidden="true">
       <div class="ptable-felt"><span>${n}<small>kişi</small></span></div>
       ${seats}

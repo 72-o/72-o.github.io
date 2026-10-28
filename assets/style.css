@@ -302,18 +302,20 @@ input:focus, textarea:focus { border-color: var(--gold); outline: none; }
 
 .oyunlar-table td.order { padding-block: 10px; }
 .plegend { display: flex; flex-wrap: wrap; gap: 16px; margin: 10px 0 4px; font-size: 14px; font-weight: 600; color: var(--dim); }
-.goyun-grid { margin-top: 6px; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
-.gcard { background: var(--solid); border: 1px solid var(--hair); border-radius: 14px; padding: 14px 16px 18px; }
+.goyun-grid { margin-top: 6px; display: grid; grid-template-columns: repeat(auto-fit, minmax(460px, 1fr)); gap: 20px; }
+.gcard { background: var(--solid); border: 1px solid var(--hair); border-radius: 14px; padding: 16px 18px 22px; }
 .gcard-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--hair); }
 .gcard-date { font-family: var(--display); font-weight: 800; font-size: 18px; }
 .gcard-lig { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--gold); }
 
-/* a wood-railed poker table seen from above, players seated clockwise in finishing order */
-.ptable { position: relative; width: 100%; aspect-ratio: 17 / 8; margin-top: 10px; }
-.ptable-bg { position: absolute; inset: 9%; width: 82%; height: 82%; display: block; }
+/* a wood-railed poker table seen from above, players seated clockwise in finishing order.
+   --s shrinks seats a bit for tables with lots of players so they stop overlapping. */
+.ptable { position: relative; width: 100%; aspect-ratio: 3 / 2; margin: 14px 0 26px; }
+.ptable-bg { position: absolute; inset: 14%; width: 72%; height: 72%; display: block; }
 .av-wrap { position: relative; display: inline-flex; }
 .picon {
-  position: absolute; top: -9px; right: -10px; font-size: 16px; line-height: 1;
+  position: absolute; top: calc(-9px * var(--s, 1)); right: calc(-10px * var(--s, 1));
+  font-size: calc(17px * var(--s, 1)); line-height: 1;
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, .6));
 }
 .ptable-felt {
@@ -323,17 +325,20 @@ input:focus, textarea:focus { border-color: var(--gold); outline: none; }
 .ptable-felt span { font-family: var(--display); font-weight: 800; font-size: 22px; color: rgba(255, 246, 238, .5); line-height: 1; text-align: center; }
 .ptable-felt small { display: block; font-family: var(--body); font-weight: 600; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: rgba(255, 246, 238, .35); }
 .pseat {
-  position: absolute; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 2px;
-  width: 72px; text-align: center;
+  position: absolute; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center;
+  gap: calc(2px * var(--s, 1)); width: calc(78px * var(--s, 1)); text-align: center;
 }
 .pseat .av {
-  width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center;
+  width: calc(36px * var(--s, 1)); height: calc(36px * var(--s, 1)); border-radius: 50%; display: grid; place-items: center;
   background: #1f050b; border: 2px solid var(--hair); color: var(--paper);
-  font-family: var(--display); font-weight: 800; font-size: 15px;
+  font-family: var(--display); font-weight: 800; font-size: calc(16px * var(--s, 1));
   box-shadow: 0 2px 6px rgba(0, 0, 0, .4);
 }
-.pseat .nm { font-size: 12px; font-weight: 600; line-height: 1.15; max-width: 72px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-shadow: 0 1px 3px rgba(0, 0, 0, .6); }
-.pseat .pt { font-family: var(--display); font-weight: 700; font-size: 12px; color: var(--gold); text-shadow: 0 1px 3px rgba(0, 0, 0, .6); }
+.pseat .nm {
+  font-size: calc(13px * var(--s, 1)); font-weight: 600; line-height: 1.15; max-width: calc(78px * var(--s, 1));
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-shadow: 0 1px 3px rgba(0, 0, 0, .6);
+}
+.pseat .pt { font-family: var(--display); font-weight: 700; font-size: calc(12px * var(--s, 1)); color: var(--gold); text-shadow: 0 1px 3px rgba(0, 0, 0, .6); }
 .pseat .pt small { font-family: var(--body); font-weight: 500; font-size: 10px; color: var(--dim); margin-left: 1px; }
 .pseat.win .av { border-color: var(--gold); background: rgba(243, 198, 90, .2); color: var(--gold); box-shadow: 0 0 0 4px rgba(243, 198, 90, .15); }
 .pseat.win .nm { color: var(--gold); }
@@ -343,13 +348,11 @@ input:focus, textarea:focus { border-color: var(--gold); outline: none; }
 .pseat.third .nm { color: var(--bronze); }
 .pseat.loser .av { border-color: var(--loser); background: rgba(180, 139, 224, .2); color: var(--loser); box-shadow: 0 0 0 4px rgba(180, 139, 224, .15); }
 .pseat.loser .nm { color: var(--loser); }
-@media (max-width: 560px) {
+@media (max-width: 980px) {
   .goyun-grid { grid-template-columns: 1fr; }
-  .ptable { aspect-ratio: 11 / 7; }
-  .pseat { width: 58px; }
-  .pseat .av { width: 28px; height: 28px; font-size: 13px; }
-  .pseat .nm { font-size: 11px; max-width: 58px; }
-  .picon { font-size: 13px; top: -7px; right: -8px; }
+}
+@media (max-width: 560px) {
+  .ptable { aspect-ratio: 5 / 4; }
 }
 
 /* ---------- Blindlar ---------- */
