@@ -310,7 +310,7 @@ input:focus, textarea:focus { border-color: var(--gold); outline: none; }
 
 /* a wood-railed poker table seen from above, players seated clockwise in finishing order.
    --s shrinks seats a bit for tables with lots of players so they stop overlapping. */
-.ptable { position: relative; width: 100%; aspect-ratio: 3 / 2; margin: 14px 0 26px; }
+.ptable { position: relative; width: 100%; aspect-ratio: 3 / 2; margin: 26px 0 34px; }
 .ptable-bg { position: absolute; inset: 14%; width: 72%; height: 72%; display: block; }
 .av-wrap { position: relative; display: inline-flex; }
 .picon {

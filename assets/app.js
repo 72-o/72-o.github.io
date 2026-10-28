@@ -965,9 +965,44 @@ function gameRankHTML(g, nk) {
 }
 
 // Seats laid out clockwise around an oval, starting at 12 o'clock, winner first.
+// The table image is a rounded rectangle (a stadium), inset 14% into the card on every
+// side, so its half-width/half-height in the card's own width-units are:
+const PTABLE_ASPECT = 3 / 2;             // matches the .ptable CSS aspect-ratio
+const PTABLE_IMG_A = 0.36;               // image half-width, as a fraction of card width
+const PTABLE_IMG_B = 0.36 / PTABLE_ASPECT; // image half-height, in the same width-units
+const SEAT_GAP = 0.085;                  // constant visual gap from the rail, in width-units
+
+// Seats are spaced evenly along the table's actual outline, offset outward by a fixed
+// gap: a flat run along the top/bottom, a curved arc around each rounded end. That keeps
+// every seat the same distance from the rail, instead of a plain ellipse (equal angles,
+// not equal rail-distance) leaving the top/bottom seats stranded far from the straight
+// edge while the side seats hug the curve.
 function seatPos(i, n) {
-  const angle = (-90 + (360 * i) / n) * Math.PI / 180;
-  return { x: 50 + 47 * Math.cos(angle), y: 50 + 44 * Math.sin(angle) };
+  const a = PTABLE_IMG_A + SEAT_GAP;
+  const b = PTABLE_IMG_B + SEAT_GAP;
+  const L = a - b;               // half-length of each straight side
+  const arc = Math.PI * b;       // length of one rounded end
+  const perimeter = 4 * L + 2 * arc;
+  let d = (perimeter * i) / n;   // distance walked clockwise from top-center, in width-units
+
+  let x, y;
+  if (d <= L) {
+    x = d; y = -b;
+  } else if ((d -= L) <= arc) {
+    const t = -Math.PI / 2 + d / b;
+    x = L + b * Math.cos(t); y = b * Math.sin(t);
+  } else if ((d -= arc) <= 2 * L) {
+    x = L - d; y = b;
+  } else if ((d -= 2 * L) <= arc) {
+    const t = Math.PI / 2 + d / b;
+    x = -L + b * Math.cos(t); y = b * Math.sin(t);
+  } else {
+    d -= arc;
+    x = -L + d; y = -b;
+  }
+  // x is a fraction of card width; convert y (same width-units) into a fraction of card
+  // height by scaling with the aspect ratio, since left%/top% resolve against different axes.
+  return { x: 50 + 100 * x, y: 50 + 100 * PTABLE_ASPECT * y };
 }
 
 // Bigger tables seat more people in the same ellipse, so seats shrink a bit past 6 players
