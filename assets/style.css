@@ -217,6 +217,8 @@ input:focus, textarea:focus { border-color: var(--gold); outline: none; }
 .tag { display: inline-block; margin-left: 8px; padding: 1px 8px; border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: .04em; vertical-align: 2px; }
 .tag.new { background: rgba(243, 198, 90, .18); color: var(--gold); }
 .tag.dup { background: rgba(255, 161, 148, .18); color: var(--bad); }
+.tag.win { background: rgba(243, 198, 90, .18); color: var(--gold); }
+.tag.loser { background: rgba(224, 227, 231, .14); color: var(--silver); }
 .newbox { margin-top: 14px; padding: 14px; border-radius: 12px; background: rgba(243, 198, 90, .08); border: 1px solid rgba(243, 198, 90, .3); display: flex; flex-direction: column; gap: 10px; }
 .newbox p { margin: 0; }
 .suggest { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 15px; }
@@ -276,6 +278,29 @@ input:focus, textarea:focus { border-color: var(--gold); outline: none; }
   .kpis { gap: 20px; }
   .kpis div { align-items: flex-start; }
 }
+
+/* ---------- Oyunlar ---------- */
+.view-toggle { display: flex; border: 1px solid var(--hair); border-radius: 10px; overflow: hidden; }
+.view-toggle button { min-height: 38px; padding: 0 16px; background: var(--panel-2); border: 0; border-left: 1px solid var(--hair); color: var(--dim); font-weight: 600; font-size: 14px; cursor: pointer; }
+.view-toggle button:first-child { border-left: 0; }
+.view-toggle button[aria-checked="true"] { background: var(--gold); color: #3a0a14; }
+
+.glist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+.glist li { display: flex; align-items: center; gap: 8px; padding: 3px 0; }
+.glist .pl { font-family: var(--display); font-weight: 800; font-size: 16px; color: var(--dim); width: 18px; flex: none; }
+.glist .nm { font-weight: 600; flex: 1; min-width: 0; }
+.glist .pt { font-family: var(--display); font-weight: 700; font-size: 15px; color: var(--gold); flex: none; }
+.glist .pt small { font-family: var(--body); font-size: 11px; color: var(--dim); font-weight: 500; margin-left: 3px; }
+.glist li.win .pl, .glist li.win .nm { color: var(--gold); }
+.glist li.loser .nm { color: var(--dim); }
+.glist .tag { margin-left: 6px; font-size: 10px; padding: 0 6px; vertical-align: 1px; }
+
+.oyunlar-table td.order { padding-block: 10px; }
+.goyun-grid { margin-top: 10px; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+.gcard { background: var(--solid); border: 1px solid var(--hair); border-radius: 14px; padding: 14px 16px; }
+.gcard-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--hair); }
+.gcard-date { font-family: var(--display); font-weight: 800; font-size: 18px; }
+.gcard-lig { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--gold); }
 
 /* ---------- Blindlar ---------- */
 .blind-form { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px 20px; }

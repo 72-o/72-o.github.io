@@ -8,6 +8,7 @@ const API = `https://api.github.com/repos/${REPO}`;
 const LS_TOKEN = 'poker.token';
 const LS_DETAIL = 'poker.detail';
 const LS_BLINDS = 'poker.blinds';
+const LS_GAMEVIEW = 'poker.gameview';
 const GAMES_PREVIEW = 20;
 const HISTORY_PREVIEW = 30;
 
@@ -34,6 +35,7 @@ const state = {
   playerBusy: false,
   form: blankForm(),
   blinds: loadBlinds(),
+  gamesView: lsGet(LS_GAMEVIEW) === 'grid' ? 'grid' : 'table',
 };
 
 function emptyDb() {
@@ -77,7 +79,12 @@ function fmtDateTime(iso) {
 }
 
 function orderText(players) {
-  return players.map((n, i) => `<b>${i + 1}.</b> ${esc(n)}`).join(' &nbsp;');
+  const n = players.length;
+  return players.map((name, i) => {
+    const place = i + 1;
+    const tag = S.isFirstLoser(place, n) ? ' <span class="tag loser">ilk kaybeden</span>' : '';
+    return `<b>${place}.</b> ${esc(name)}${tag}`;
+  }).join(' &nbsp;');
 }
 
 function nicks() {
@@ -228,6 +235,7 @@ function render() {
   if (route === 'yeni') return renderYeni();
   if (route === 'yardim') return renderYardim();
   if (route === 'blind') return renderBlind();
+  if (route === 'oyunlar') return renderOyunlar();
   const scope = S.findScope(state.db, route, today);
   if (!scope) {
     view.innerHTML = `<div class="empty"><strong>Sayfa bulunamadı</strong><a href="#ana">Ana Tablo'ya dön</a></div>`;
@@ -274,6 +282,7 @@ const COLS = [
   { key: 'p1', label: '1.', medal: 'var(--gold)', cell: p => p.p1, zero: p => !p.p1 },
   { key: 'p2', label: '2.', medal: 'var(--silver)', cell: p => p.p2, zero: p => !p.p2 },
   { key: 'p3', label: '3.', medal: 'var(--bronze)', cell: p => p.p3, zero: p => !p.p3 },
+  { key: 'pL', label: 'İlk kaybeden', detail: true, cell: p => p.pL, zero: p => !p.pL },
   { key: 'winPct', label: 'Kazanma %', cell: p => S.fmtPct(p.winPct) },
   { key: 'podiumPct', label: 'Podyum %', cell: p => S.fmtPct(p.podiumPct) },
   { key: 'points', label: 'Lig puanı', cell: p => p.points },
@@ -928,6 +937,75 @@ async function setDeleted(id, deleted) {
   render();
 }
 
+// ---------- Oyunlar (geçmiş oyunlar) ----------
+
+function gameRankHTML(g, nk) {
+  const n = g.players.length;
+  const items = g.players.map((name, i) => {
+    const place = i + 1;
+    const pts = S.pointsFor(place, n);
+    const disp = S.displayName(name, nk);
+    const cls = place === 1 ? ' win' : S.isFirstLoser(place, n) ? ' loser' : '';
+    const tag = place === 1 ? '<span class="tag win">kazanan</span>' : S.isFirstLoser(place, n) ? '<span class="tag loser">ilk kaybeden</span>' : '';
+    return `<li class="${cls.trim()}"><span class="pl">${place}</span><span class="nm">${esc(disp)}${tag}</span><span class="pt">${pts}<small>puan</small></span></li>`;
+  }).join('');
+  return `<ol class="glist">${items}</ol>`;
+}
+
+function renderOyunlar() {
+  const nk = nicks();
+  const games = S.activeGames(state.db).slice().reverse();
+  const gv = state.gamesView;
+
+  const head = `<section class="page-head">
+      <p class="eyebrow">Geçmiş</p><h1>Oyunlar</h1>
+      <p class="lede">Her oyunun tam sıralaması, kim kazandı, kim ilk kaybeden oldu — hepsi burada. Tablo ya da kart görünümüyle incele.</p>
+    </section>`;
+
+  if (!games.length) {
+    view.innerHTML = `${head}<div class="empty"><strong>Henüz oyun yok</strong>İlk oyun eklendiğinde burada listelenir.</div>`;
+    return;
+  }
+
+  const toggle = `<div class="view-toggle" role="radiogroup" aria-label="Görünüm">
+      <button type="button" role="radio" aria-checked="${gv === 'table'}" data-view="table">Tablo</button>
+      <button type="button" role="radio" aria-checked="${gv === 'grid'}" data-view="grid">Kart</button>
+    </div>`;
+
+  let body;
+  if (gv === 'grid') {
+    body = `<div class="goyun-grid">${games.map(g => `
+      <article class="gcard">
+        <div class="gcard-head">
+          <span class="gcard-date">${S.formatDate(g.date)}</span>
+          <span class="gcard-lig">${esc(S.ligLabel(S.ligKey(g.date)).replace('–', ' – '))}</span>
+        </div>
+        ${gameRankHTML(g, nk)}
+      </article>`).join('')}</div>`;
+  } else {
+    const rows = games.map(g => `<tr>
+        <td class="num">#${g.id}</td>
+        <td>${S.formatDate(g.date)}</td>
+        <td>${esc(S.ligLabel(S.ligKey(g.date)))}</td>
+        <td class="num">${g.players.length}</td>
+        <td class="order">${gameRankHTML(g, nk)}</td>
+      </tr>`).join('');
+    body = `<div class="table-wrap"><table class="games oyunlar-table">
+        <thead><tr><th>#</th><th>Tarih</th><th>Lig</th><th>Kişi</th><th style="text-align:left">Sıralama</th></tr></thead>
+        <tbody>${rows}</tbody></table></div>`;
+  }
+
+  view.innerHTML = `${head}
+    <div class="toolbar"><p class="sorted">${games.length} oyun</p>${toggle}</div>
+    ${body}`;
+
+  view.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click', () => {
+    state.gamesView = b.dataset.view;
+    lsSet(LS_GAMEVIEW, state.gamesView);
+    render();
+  }));
+}
+
 // ---------- Blindlar ----------
 
 const HOURS = [1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 6];
@@ -1056,13 +1134,15 @@ function renderYardim() {
       <dl class="defs">
         <dt>Ana Tablo</dt><dd>Bütün zamanların tablosu. Hiç sıfırlanmaz, açılışta kazanma oranına göre sıralıdır.</dd>
         <dt>Ligler</dt><dd>Her lig 1 Ekim'de başlar, 30 Eylül'de biter. Yeni lig kendiliğinden açılır, geçmiş ligler menüde kalır. Açılışta lig puanına göre sıralıdır.</dd>
+        <dt>Oyunlar</dt><dd>Oynanmış her oyunun tam sıralaması; tablo ya da kart görünümüyle. Kazanan ve ilk kaybeden işaretlenir.</dd>
         <dt>Yeni Veri</dt><dd>Oyuncular ve nickleri, maç kaydı, bütün oyunların listesi, CSV ve değişiklik geçmişi.</dd>
         <dt>Blindlar</dt><dd>Oyuncu sayısı, çipler ve hedef süreden başlangıç blind'larını ve ne zaman ne kadar artacaklarını hesaplar. Girdiğin değerler bu cihazda hatırlanır.</dd>
       </dl></section>
 
     <section><h2>Lig puanı</h2>
-      <ul class="pts"><li><b>5</b>1.</li><li><b>4</b>2.</li><li><b>3</b>3.</li><li><b>1</b>diğerleri</li><li><b>0</b>sonuncu</li></ul>
-      <p>Puanlar ligin bütün oyunlarında toplanır. Az kişili bir oyunda 3. aynı zamanda sonuncuysa 3 puan alır. Puan eşitse önce 1.lik, sonra 2.lik, sonra 3.lük sayısı fazla olan öne geçer.</p></section>
+      <ul class="pts"><li><b>N</b>1.</li><li><b>N−2</b>2.</li><li><b>N−4</b>3.</li><li><b>0</b>diğerleri</li></ul>
+      <p>Puan, oyuncu sayısına (N) göre ölçeklenir: 10 kişilik bir oyunu kazanmak, 5 kişilik bir oyunu kazanmaktan daha değerlidir. Kazanan N puan alır, 2. N−2, 3. N−4 (hiç negatif olmaz), geri kalanlar puan almaz. Puanlar ligin bütün oyunlarında toplanır. Puan eşitse önce 1.lik, sonra 2.lik, sonra 3.lük sayısı fazla olan öne geçer.</p>
+      <p><strong>İlk kaybeden:</strong> podyuma en yakın ama giremeyen, yani 4. sırada bitiren oyuncu. Puan almaz ama "Detaylı istatistikler" ve <a href="#oyunlar">Oyunlar</a> sayfasında ayrıca işaretlenir.</p></section>
 
     <section><h2>Sütunlar</h2>
       <dl class="defs">

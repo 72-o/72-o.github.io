@@ -53,7 +53,7 @@ export function cardHTML(board) {
 function foot(isAna) {
   const rule = isAna
     ? `Sıralama: kazanma oranı · oyunların en az %${MIN_SHARE}'u`
-    : 'Puan: 1. = 5 · 2. = 4 · 3. = 3 · diğer = 1 · son = 0';
+    : 'Puan: 1. = N · 2. = N−2 · 3. = N−4 · diğer = 0 (N = oyuncu sayısı)';
   return `<footer class="c-foot"><span><b>${SITE_URL}</b></span><span>${rule}</span></footer>`;
 }
 

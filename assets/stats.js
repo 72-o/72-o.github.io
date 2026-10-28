@@ -23,13 +23,18 @@ export function displayName(name, nicks) {
 
 // ---------- points ----------
 
-// 1st 5, 2nd 4, 3rd 3, last 0, everyone else 1. Podium wins over "last" at tiny tables.
+// Points scale with table size so winning a bigger game is worth more: 1st = oyuncu sayısı,
+// 2nd = oyuncu sayısı − 2, 3rd = oyuncu sayısı − 4 (never below 0), everyone else gets nothing.
 export function pointsFor(place, tableSize) {
-  if (place === 1) return 5;
-  if (place === 2) return 4;
-  if (place === 3) return 3;
-  if (place === tableSize) return 0;
-  return 1;
+  if (place === 1) return tableSize;
+  if (place === 2) return Math.max(0, tableSize - 2);
+  if (place === 3) return Math.max(0, tableSize - 4);
+  return 0;
+}
+
+// The 4th-place finisher is the "ilk kaybeden" (first loser): first one just off the podium.
+export function isFirstLoser(place, tableSize) {
+  return place === 4 && tableSize >= 4;
 }
 
 // ---------- dates and leagues ----------
@@ -164,7 +169,7 @@ export function buildBoard(games, scope, nicks = {}) {
   const get = name => {
     const k = nameKey(name);
     if (!map.has(k)) {
-      map.set(k, { name: displayName(name, nicks), realName: cleanName(name), games: 0, p1: 0, p2: 0, p3: 0, points: 0, expected: 0, history: [], mu: MU, sigma: SIGMA });
+      map.set(k, { name: displayName(name, nicks), realName: cleanName(name), games: 0, p1: 0, p2: 0, p3: 0, pL: 0, points: 0, expected: 0, history: [], mu: MU, sigma: SIGMA });
     }
     return map.get(k);
   };
@@ -179,6 +184,7 @@ export function buildBoard(games, scope, nicks = {}) {
       if (place === 1) p.p1++;
       else if (place === 2) p.p2++;
       else if (place === 3) p.p3++;
+      else if (isFirstLoser(place, n)) p.pL++;
       p.points += pts;
       p.expected += 1 / n;
       p.history.push({ place, n, pts });
@@ -196,6 +202,7 @@ export function buildBoard(games, scope, nicks = {}) {
       p1: p.p1,
       p2: p.p2,
       p3: p.p3,
+      pL: p.pL,
       points: p.points,
       winPct: p.p1 / p.games,
       podiumPct: (p.p1 + p.p2 + p.p3) / p.games,
@@ -234,6 +241,7 @@ export const SORT_KEYS = {
   p1: p => p.p1,
   p2: p => p.p2,
   p3: p => p.p3,
+  pL: p => p.pL,
   winPct: p => p.winPct,
   podiumPct: p => p.podiumPct,
   points: p => p.points,
