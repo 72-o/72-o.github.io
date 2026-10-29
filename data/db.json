@@ -11,7 +11,8 @@
     {"name":"Mehmet","nick":"MeÇo"},
     {"name":"Anıl"},
     {"name":"Mert"},
-    {"name":"Efe"}
+    {"name":"Efe"},
+    {"name":"Cem Ata"}
   ],
   "games": [
     {"id":1,"date":"2026-10-01","players":["Recep","Gökay","Orhan","Mete","Barış"]},
@@ -35,6 +36,7 @@
     {"at":"2026-10-19T08:54:37.942Z","action":"add","id":3,"after":{"date":"2026-10-15","players":["Mehmet","Orhan","Anıl","Recep","Mert","Doruk","Alper","Mete","Barış"]}},
     {"at":"2026-10-28T13:57:54.726Z","action":"player-add","after":{"name":"Efe","nick":""}},
     {"at":"2026-10-28T13:58:58.917Z","action":"add","id":4,"after":{"date":"2026-10-28","players":["Recep","Efe","Doruk","Barış","Mete","Orhan","Alper","Gökay","Anıl"]}},
-    {"at":"2026-10-29T08:18:10.943Z","action":"edit","id":4,"before":{"date":"2026-10-28","players":["Recep","Efe","Doruk","Barış","Mete","Orhan","Alper","Gökay","Anıl"]},"after":{"date":"2026-10-22","players":["Recep","Efe","Doruk","Barış","Mete","Orhan","Alper","Gökay","Anıl"]}}
+    {"at":"2026-10-29T08:18:10.943Z","action":"edit","id":4,"before":{"date":"2026-10-28","players":["Recep","Efe","Doruk","Barış","Mete","Orhan","Alper","Gökay","Anıl"]},"after":{"date":"2026-10-22","players":["Recep","Efe","Doruk","Barış","Mete","Orhan","Alper","Gökay","Anıl"]}},
+    {"at":"2026-10-29T08:18:56.823Z","action":"player-add","after":{"name":"Cem Ata","nick":""}}
   ]
 }
