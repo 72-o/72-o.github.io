@@ -21,7 +21,8 @@
     {"id":3,"date":"2026-10-15","players":["Mehmet","Orhan","Anıl","Recep","Mert","Doruk","Alper","Mete","Barış"]},
     {"id":4,"date":"2026-10-22","players":["Recep","Efe","Doruk","Barış","Mete","Orhan","Alper","Gökay","Anıl"]},
     {"id":5,"date":"2026-10-28","players":["Recep","Barış","Anıl","Cem Ata","Furkan","Mete"]},
-    {"id":6,"date":"2026-11-04","players":["Mert","Mete","Recep","Alper","Anıl","Doruk","Mehmet"]}
+    {"id":6,"date":"2026-11-04","players":["Mert","Mete","Recep","Alper","Anıl","Doruk","Mehmet"]},
+    {"id":7,"date":"2026-11-19","players":["Anıl","Efe","Orhan","Mete","Doruk","Mert","Recep"]}
   ],
   "log": [
     {"at":"2026-10-05T12:10:23.920Z","action":"player-add","after":{"name":"Orhan","nick":"OBE"}},
@@ -43,6 +44,7 @@
     {"at":"2026-10-29T08:18:56.823Z","action":"player-add","after":{"name":"Cem Ata","nick":""}},
     {"at":"2026-10-29T08:19:09.017Z","action":"player-add","after":{"name":"Furkan","nick":""}},
     {"at":"2026-10-29T08:19:40.354Z","action":"add","id":5,"after":{"date":"2026-10-28","players":["Recep","Barış","Anıl","Cem Ata","Furkan","Mete"]}},
-    {"at":"2026-11-19T21:48:29.686Z","action":"add","id":6,"after":{"date":"2026-11-04","players":["Mert","Mete","Recep","Alper","Anıl","Doruk","Mehmet"]}}
+    {"at":"2026-11-19T21:48:29.686Z","action":"add","id":6,"after":{"date":"2026-11-04","players":["Mert","Mete","Recep","Alper","Anıl","Doruk","Mehmet"]}},
+    {"at":"2026-11-19T21:49:04.734Z","action":"add","id":7,"after":{"date":"2026-11-19","players":["Anıl","Efe","Orhan","Mete","Doruk","Mert","Recep"]}}
   ]
 }
