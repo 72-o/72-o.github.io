@@ -9,7 +9,7 @@
     {"name":"Doruk","nick":"D.S.K"},
     {"name":"Alper","nick":"AEK"},
     {"name":"Mehmet","nick":"MeÇo"},
-    {"name":"Anıl"},
+    {"name":"Anıl","photo":"data/photos/mx0owa97.jpg"},
     {"name":"Mert"},
     {"name":"Efe"},
     {"name":"Cem Ata"},
@@ -57,6 +57,7 @@
     {"at":"2026-11-28T17:29:36.776Z","action":"player-edit","before":{"name":"Mete","nick":"MetOsimhen"},"after":{"name":"Mete","nick":"MetOsimhen"}},
     {"at":"2026-11-28T17:31:03.891Z","action":"player-edit","before":{"name":"Mete","nick":"MetOsimhen"},"after":{"name":"Mete","nick":"MetOsimhen"}},
     {"at":"2026-11-28T17:32:21.972Z","action":"player-edit","before":{"name":"Mete","nick":"MetOsimhen"},"after":{"name":"Mete","nick":"MetOsimhen"}},
-    {"at":"2026-11-28T17:33:56.445Z","action":"player-edit","before":{"name":"Recep","nick":""},"after":{"name":"Recep","nick":""}}
+    {"at":"2026-11-28T17:33:56.445Z","action":"player-edit","before":{"name":"Recep","nick":""},"after":{"name":"Recep","nick":""}},
+    {"at":"2026-11-28T17:34:06.176Z","action":"player-edit","before":{"name":"Anıl","nick":""},"after":{"name":"Anıl","nick":""}}
   ]
 }
