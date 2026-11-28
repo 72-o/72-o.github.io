@@ -14,7 +14,7 @@
     {"name":"Efe"},
     {"name":"Cem Ata"},
     {"name":"Furkan"},
-    {"name":"Alex","nick":"Komsu"}
+    {"name":"Alex","nick":"Komsu","photo":"data/photos/mx0pk7bf.jpg"}
   ],
   "games": [
     {"id":1,"date":"2026-10-01","players":["Recep","Gökay","Orhan","Mete","Barış"]},
@@ -64,6 +64,7 @@
     {"at":"2026-11-28T17:48:00.931Z","action":"player-edit","before":{"name":"Alper","nick":"AEK"},"after":{"name":"Alper","nick":"AEK"}},
     {"at":"2026-11-28T17:48:17.308Z","action":"player-edit","before":{"name":"Barış","nick":""},"after":{"name":"Barış","nick":""}},
     {"at":"2026-11-28T17:48:33.689Z","action":"player-edit","before":{"name":"Mehmet","nick":"MeÇo"},"after":{"name":"Mehmet","nick":"MeÇo"}},
-    {"at":"2026-11-28T17:48:49.459Z","action":"player-edit","before":{"name":"Mert","nick":""},"after":{"name":"Mert","nick":""}}
+    {"at":"2026-11-28T17:48:49.459Z","action":"player-edit","before":{"name":"Mert","nick":""},"after":{"name":"Mert","nick":""}},
+    {"at":"2026-11-28T17:52:42.011Z","action":"player-edit","before":{"name":"Alex","nick":"Komsu"},"after":{"name":"Alex","nick":"Komsu"}}
   ]
 }
