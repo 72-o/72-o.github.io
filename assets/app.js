@@ -540,13 +540,19 @@ function avatarHTML(p) {
   return p.photo ? `<img class="pface" src="${esc(p.photo)}" alt="">` : `<span class="pface empty" aria-hidden="true">${esc([...p.name][0] || '?')}</span>`;
 }
 
-// Center-crops to a square and downsizes so photos stay tiny (a few KB) in the repo.
-async function resizePhoto(file) {
-  const bmp = await createImageBitmap(file);
-  const side = Math.min(bmp.width, bmp.height);
+// Draws the chosen square crop (zoom >= 1; x/y in 0..1 pick the window position) onto a canvas.
+function drawCrop(canvas, bmp, { zoom, x, y }) {
+  const side = Math.min(bmp.width, bmp.height) / zoom;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(bmp, (bmp.width - side) * x, (bmp.height - side) * y, side, side, 0, 0, canvas.width, canvas.height);
+}
+
+// Downsizes to 160px so photos stay tiny (a few KB) in the repo.
+async function cropToBase64(bmp, crop) {
   const c = document.createElement('canvas');
   c.width = c.height = 160;
-  c.getContext('2d').drawImage(bmp, (bmp.width - side) / 2, (bmp.height - side) / 2, side, side, 0, 0, 160, 160);
+  drawCrop(c, bmp, crop);
   const blob = await new Promise(res => c.toBlob(res, 'image/jpeg', 0.85));
   const buf = new Uint8Array(await blob.arrayBuffer());
   let bin = '';
@@ -554,11 +560,44 @@ async function resizePhoto(file) {
   return btoa(bin);
 }
 
-async function uploadPhoto(file, key) {
-  const content = await resizePhoto(file);
+async function uploadPhoto(draft, key) {
+  const content = await cropToBase64(draft.bmp, draft.crop);
   const path = `data/photos/${Date.now().toString(36)}.jpg`;
   await gh(`/contents/${path}`, { method: 'PUT', body: JSON.stringify({ message: `Fotoğraf: ${key}`, content, branch: 'main' }) });
   return path;
+}
+
+// Shows a live preview with zoom / position sliders once a file is picked.
+let photoDraft = null;
+async function bindPhotoPicker() {
+  photoDraft = null;
+  const input = document.getElementById('pe-photo');
+  if (!input) return;
+  input.addEventListener('change', async () => {
+    view.querySelector('.photo-adjust')?.remove();
+    photoDraft = null;
+    const file = input.files[0];
+    if (!file) return;
+    let bmp;
+    try { bmp = await createImageBitmap(file); } catch {
+      document.getElementById('p-msg').innerHTML = '<p class="msg err">Bu resim açılamadı (HEIC olabilir). JPG veya PNG seç.</p>';
+      input.value = '';
+      return;
+    }
+    document.getElementById('p-msg').innerHTML = '';
+    const draft = photoDraft = { bmp, crop: { zoom: 1, x: 0.5, y: 0.5 } };
+    const box = document.createElement('div');
+    box.className = 'photo-adjust';
+    box.innerHTML = `<canvas width="120" height="120"></canvas><div class="sliders">
+        <label>Yakınlaştır <input type="range" data-k="zoom" min="1" max="4" step="0.05" value="1"></label>
+        <label>Yatay <input type="range" data-k="x" min="0" max="1" step="0.01" value="0.5"></label>
+        <label>Dikey <input type="range" data-k="y" min="0" max="1" step="0.01" value="0.5"></label></div>`;
+    input.closest('.photo-pick').after(box);
+    const canvas = box.querySelector('canvas');
+    const redraw = () => drawCrop(canvas, bmp, draft.crop);
+    box.querySelectorAll('input').forEach(r => r.addEventListener('input', () => { draft.crop[r.dataset.k] = Number(r.value); redraw(); }));
+    redraw();
+  });
 }
 
 async function deletePhoto(path) {
@@ -638,6 +677,8 @@ function bindPlayers() {
     }, `Oyuncu eklendi: ${name}`, `${name} eklendi.`);
   });
 
+  bindPhotoPicker();
+
   view.querySelectorAll('[data-p-edit]').forEach(b => b.addEventListener('click', () => {
     state.playerEdit = b.dataset.pEdit;
     state.playerMsg = null;
@@ -654,7 +695,7 @@ function bindPlayers() {
     const nameEl = document.getElementById('pe-name');
     const name = current.count ? current.name : S.cleanName(nameEl.value);
     const nick = S.cleanName(document.getElementById('pe-nick').value);
-    const file = document.getElementById('pe-photo')?.files[0];
+    const file = photoDraft;
     const removePhoto = !file && !!document.getElementById('pe-photo-rm')?.checked;
     if (name === current.name && nick === current.nick && !file && !removePhoto) { state.playerEdit = null; render(); return; }
     const err = validatePlayer(state.db, name, nick, key);
@@ -666,7 +707,7 @@ function bindPlayers() {
     if (file) {
       btn.textContent = 'Yükleniyor…';
       try { newPhoto = await uploadPhoto(file, key); } catch (er) {
-        document.getElementById('p-msg').innerHTML = `<p class="msg err">Fotoğraf yüklenemedi: ${esc(er.status ? errorText(er) : 'Geçerli bir resim seç.')}</p>`;
+        document.getElementById('p-msg').innerHTML = `<p class="msg err">Fotoğraf yüklenemedi: ${esc(errorText(er))}</p>`;
         btn.textContent = 'Kaydet';
         return;
       }

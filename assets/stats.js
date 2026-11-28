@@ -305,7 +305,7 @@ export function gamesCsv(games, nicks = {}) {
 // One player, game or log entry per line keeps the git history readable.
 export function serializeDb(db) {
   const list = arr => (arr.length ? '\n' + arr.map(x => '    ' + JSON.stringify(x)).join(',\n') + '\n  ' : '');
-  const players = (db.players || []).map(p => (p.nick ? { name: p.name, nick: p.nick } : { name: p.name }));
+  const players = (db.players || []).map(p => ({ name: p.name, ...(p.nick ? { nick: p.nick } : {}), ...(p.photo ? { photo: p.photo } : {}) }));
   return `{\n  "version": 1,\n  "players": [${list(players)}],\n  "games": [${list(db.games || [])}],\n  "log": [${list(db.log || [])}]\n}\n`;
 }
 
