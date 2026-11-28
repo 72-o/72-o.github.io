@@ -575,7 +575,8 @@ function playersHTML(admin) {
     if (admin && state.playerEdit === p.key) {
       return `<tr class="editing-row">
           <td><input type="text" id="pe-name" value="${esc(p.name)}" maxlength="30" aria-label="İsim"${p.count ? ' disabled title="Oyunu olan oyuncunun ismi değiştirilemez"' : ''}>
-            <label class="photo-pick">${avatarHTML(p)}<input type="file" id="pe-photo" accept="image/*" aria-label="Fotoğraf"></label></td>
+            <label class="photo-pick">${avatarHTML(p)}<input type="file" id="pe-photo" accept="image/*" aria-label="Fotoğraf"></label>
+            ${p.photo ? '<label class="photo-rm"><input type="checkbox" id="pe-photo-rm"> Fotoğrafı kaldır</label>' : ''}</td>
           <td><input type="text" id="pe-nick" value="${esc(p.nick)}" maxlength="24" placeholder="Nick" aria-label="Nick"></td>
           <td class="num">${p.count}</td>
           <td><span class="acts"><button type="button" class="btn small primary" data-p-save="${esc(p.key)}">Kaydet</button>
@@ -653,7 +654,8 @@ function bindPlayers() {
     const name = current.count ? current.name : S.cleanName(nameEl.value);
     const nick = S.cleanName(document.getElementById('pe-nick').value);
     const file = document.getElementById('pe-photo')?.files[0];
-    if (name === current.name && nick === current.nick && !file) { state.playerEdit = null; render(); return; }
+    const removePhoto = !file && !!document.getElementById('pe-photo-rm')?.checked;
+    if (name === current.name && nick === current.nick && !file && !removePhoto) { state.playerEdit = null; render(); return; }
     const err = validatePlayer(state.db, name, nick, key);
     if (err) {
       document.getElementById('p-msg').innerHTML = `<p class="msg err">${esc(err)}</p>`;
@@ -680,6 +682,7 @@ function bindPlayers() {
       entry.name = newName;
       if (nick) entry.nick = nick; else delete entry.nick;
       if (newPhoto) { oldPhoto = entry.photo || ''; entry.photo = newPhoto; }
+      else if (removePhoto && entry.photo) { oldPhoto = entry.photo; delete entry.photo; }
       db.log.push({ at: new Date().toISOString(), action: 'player-edit', before: { name: fresh.name, nick: fresh.nick }, after: { name: newName, nick } });
     }, `Oyuncu düzeltildi: ${current.name}`, `${name} güncellendi.`);
     if (oldPhoto && oldPhoto !== newPhoto) deletePhoto(oldPhoto);

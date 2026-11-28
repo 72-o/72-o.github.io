@@ -437,3 +437,5 @@ input:focus, textarea:focus { border-color: var(--gold); outline: none; }
 .photo-pick { display: flex; align-items: center; gap: 8px; margin-top: 6px; font-size: 13px; }
 .photo-pick .pface { margin-right: 0; flex: none; }
 .photo-pick input { min-width: 0; font-size: 13px; }
+.photo-rm { display: flex; align-items: center; gap: 6px; margin-top: 4px; font-size: 13px; color: var(--dim); }
+.photo-rm input { min-width: 0; }
