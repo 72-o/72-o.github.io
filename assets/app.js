@@ -585,6 +585,7 @@ function playersHTML(admin) {
     }
     const acts = admin
       ? `<td><span class="acts"><button type="button" class="btn small" data-p-edit="${esc(p.key)}">Düzenle</button>
+          ${p.photo ? `<button type="button" class="btn small" data-p-nophoto="${esc(p.key)}">Fotoğrafı kaldır</button>` : ''}
           ${p.count === 0 && p.registered ? `<button type="button" class="btn small" data-p-del="${esc(p.key)}">Sil</button>` : ''}</span></td>`
       : '';
     return `<tr><td class="pname">${avatarHTML(p)}${esc(p.name)}</td><td class="pnick">${p.nick ? esc(p.nick) : '<span class="dim">–</span>'}</td><td class="num">${p.count}</td>${acts}</tr>`;
@@ -687,6 +688,21 @@ function bindPlayers() {
     }, `Oyuncu düzeltildi: ${current.name}`, `${name} güncellendi.`);
     if (oldPhoto && oldPhoto !== newPhoto) deletePhoto(oldPhoto);
   });
+
+  view.querySelectorAll('[data-p-nophoto]').forEach(b => b.addEventListener('click', async () => {
+    const key = b.dataset.pNophoto;
+    const p = S.playerList(state.db).find(x => x.key === key);
+    if (!p) return;
+    let oldPhoto = '';
+    await playerChange(db => {
+      const entry = db.players.find(x => S.nameKey(x.name) === key);
+      if (!entry || !entry.photo) throw userError('Fotoğraf zaten yok. Sayfayı yenile.');
+      oldPhoto = entry.photo;
+      delete entry.photo;
+      db.log.push({ at: new Date().toISOString(), action: 'player-edit', before: { name: p.name, nick: p.nick }, after: { name: p.name, nick: p.nick } });
+    }, `Fotoğraf kaldırıldı: ${p.name}`, `${p.name} fotoğrafı kaldırıldı.`);
+    if (oldPhoto) deletePhoto(oldPhoto);
+  }));
 
   view.querySelectorAll('[data-p-del]').forEach(b => b.addEventListener('click', () => {
     const key = b.dataset.pDel;
