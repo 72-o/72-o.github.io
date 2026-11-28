@@ -14,7 +14,7 @@
     {"name":"Efe"},
     {"name":"Cem Ata"},
     {"name":"Furkan"},
-    {"name":"Alex","nick":"Komsu"}
+    {"name":"Alex","nick":"Komsu","photo":"data/photos/mx0prrws.jpg"}
   ],
   "games": [
     {"id":1,"date":"2026-10-01","players":["Recep","Gökay","Orhan","Mete","Barış"]},
@@ -70,6 +70,7 @@
     {"at":"2026-11-28T17:56:26.238Z","action":"player-edit","before":{"name":"Alex","nick":"Komsu"},"after":{"name":"Alex","nick":"Komsu"}},
     {"at":"2026-11-28T17:57:02.702Z","action":"player-edit","before":{"name":"Alex","nick":"Komsu"},"after":{"name":"Alex","nick":"Komsu"}},
     {"at":"2026-11-28T17:58:14.984Z","action":"player-edit","before":{"name":"Alex","nick":"Komsu"},"after":{"name":"Alex","nick":"Komsu"}},
-    {"at":"2026-11-28T17:58:22.975Z","action":"player-edit","before":{"name":"Alex","nick":"Komsu"},"after":{"name":"Alex","nick":"Komsu"}}
+    {"at":"2026-11-28T17:58:22.975Z","action":"player-edit","before":{"name":"Alex","nick":"Komsu"},"after":{"name":"Alex","nick":"Komsu"}},
+    {"at":"2026-11-28T17:58:35.185Z","action":"player-edit","before":{"name":"Alex","nick":"Komsu"},"after":{"name":"Alex","nick":"Komsu"}}
   ]
 }
