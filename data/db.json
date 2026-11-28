@@ -1,7 +1,7 @@
 {
   "version": 1,
   "players": [
-    {"name":"Orhan","nick":"OBE"},
+    {"name":"Orhan","nick":"OBE","photo":"data/photos/mx0pdmxr.jpg"},
     {"name":"Mete","nick":"MetOsimhen","photo":"data/photos/mx0ou1pw.jpg"},
     {"name":"Gökay"},
     {"name":"Barış"},
@@ -59,6 +59,7 @@
     {"at":"2026-11-28T17:32:21.972Z","action":"player-edit","before":{"name":"Mete","nick":"MetOsimhen"},"after":{"name":"Mete","nick":"MetOsimhen"}},
     {"at":"2026-11-28T17:33:56.445Z","action":"player-edit","before":{"name":"Recep","nick":""},"after":{"name":"Recep","nick":""}},
     {"at":"2026-11-28T17:34:06.176Z","action":"player-edit","before":{"name":"Anıl","nick":""},"after":{"name":"Anıl","nick":""}},
-    {"at":"2026-11-28T17:34:19.891Z","action":"player-edit","before":{"name":"Doruk","nick":"D.S.K"},"after":{"name":"Doruk","nick":"D.S.K"}}
+    {"at":"2026-11-28T17:34:19.891Z","action":"player-edit","before":{"name":"Doruk","nick":"D.S.K"},"after":{"name":"Doruk","nick":"D.S.K"}},
+    {"at":"2026-11-28T17:47:35.841Z","action":"player-edit","before":{"name":"Orhan","nick":"OBE"},"after":{"name":"Orhan","nick":"OBE"}}
   ]
 }
