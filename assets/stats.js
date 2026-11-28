@@ -32,9 +32,15 @@ export function pointsFor(place, tableSize) {
   return 0;
 }
 
-// The 4th-place finisher is the "ilk kaybeden" (first loser): first one just off the podium.
+// The last-place finisher is the "son" (the loser, 💩). Needs 4+ players so it never overlaps the podium.
 export function isFirstLoser(place, tableSize) {
-  return place === 4 && tableSize >= 4;
+  return tableSize >= 4 && place === tableSize;
+}
+
+export function photoMap(db) {
+  const out = {};
+  for (const p of db?.players || []) if (p.photo) out[nameKey(p.name)] = p.photo;
+  return out;
 }
 
 // ---------- dates and leagues ----------
@@ -103,12 +109,12 @@ export function playerList(db) {
   const map = new Map();
   for (const p of db?.players || []) {
     const key = nameKey(p.name);
-    if (key && !map.has(key)) map.set(key, { key, name: cleanName(p.name), nick: cleanName(p.nick || ''), count: 0, registered: true });
+    if (key && !map.has(key)) map.set(key, { key, name: cleanName(p.name), nick: cleanName(p.nick || ''), photo: p.photo || '', count: 0, registered: true });
   }
   for (const g of db?.games || []) {
     for (const n of g.players) {
       const key = nameKey(n);
-      if (!map.has(key)) map.set(key, { key, name: cleanName(n), nick: '', count: 0, registered: false });
+      if (!map.has(key)) map.set(key, { key, name: cleanName(n), nick: '', photo: '', count: 0, registered: false });
       if (!g.deleted) map.get(key).count++;
     }
   }

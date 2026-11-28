@@ -82,7 +82,7 @@ function orderText(players) {
   const n = players.length;
   return players.map((name, i) => {
     const place = i + 1;
-    const tag = S.isFirstLoser(place, n) ? ' <span class="tag loser">ilk kaybeden</span>' : '';
+    const tag = S.isFirstLoser(place, n) ? ' <span class="tag loser">son</span>' : '';
     return `<b>${place}.</b> ${esc(name)}${tag}`;
   }).join(' &nbsp;');
 }
@@ -536,13 +536,46 @@ function validatePlayer(db, name, nick, selfKey) {
   return null;
 }
 
+function avatarHTML(p) {
+  return p.photo ? `<img class="pface" src="${esc(p.photo)}" alt="">` : `<span class="pface empty" aria-hidden="true">${esc([...p.name][0] || '?')}</span>`;
+}
+
+// Center-crops to a square and downsizes so photos stay tiny (a few KB) in the repo.
+async function resizePhoto(file) {
+  const bmp = await createImageBitmap(file);
+  const side = Math.min(bmp.width, bmp.height);
+  const c = document.createElement('canvas');
+  c.width = c.height = 160;
+  c.getContext('2d').drawImage(bmp, (bmp.width - side) / 2, (bmp.height - side) / 2, side, side, 0, 0, 160, 160);
+  const blob = await new Promise(res => c.toBlob(res, 'image/jpeg', 0.85));
+  const buf = new Uint8Array(await blob.arrayBuffer());
+  let bin = '';
+  for (let i = 0; i < buf.length; i += 0x8000) bin += String.fromCharCode(...buf.subarray(i, i + 0x8000));
+  return btoa(bin);
+}
+
+async function uploadPhoto(file, key) {
+  const content = await resizePhoto(file);
+  const path = `data/photos/${Date.now().toString(36)}.jpg`;
+  await gh(`/contents/${path}`, { method: 'PUT', body: JSON.stringify({ message: `Fotoğraf: ${key}`, content, branch: 'main' }) });
+  return path;
+}
+
+async function deletePhoto(path) {
+  try {
+    const j = await gh(`/contents/${path}?ref=main`);
+    await gh(`/contents/${path}`, { method: 'DELETE', body: JSON.stringify({ message: 'Eski fotoğraf silindi', sha: j.sha, branch: 'main' }) });
+  } catch { /* best effort */ }
+}
+
 function playersHTML(admin) {
   const roster = rosterSorted();
   const msg = state.playerMsg ? `<p class="msg ${state.playerMsg.ok ? 'ok' : 'err'}">${esc(state.playerMsg.text)}</p>` : '';
   const rows = roster.map(p => {
     if (admin && state.playerEdit === p.key) {
       return `<tr class="editing-row">
-          <td><input type="text" id="pe-name" value="${esc(p.name)}" maxlength="30" aria-label="İsim"${p.count ? ' disabled title="Oyunu olan oyuncunun ismi değiştirilemez"' : ''}></td>
+          <td><input type="text" id="pe-name" value="${esc(p.name)}" maxlength="30" aria-label="İsim"${p.count ? ' disabled title="Oyunu olan oyuncunun ismi değiştirilemez"' : ''}>
+            <label class="photo-pick">${avatarHTML(p)}<input type="file" id="pe-photo" accept="image/*" aria-label="Fotoğraf"></label></td>
           <td><input type="text" id="pe-nick" value="${esc(p.nick)}" maxlength="24" placeholder="Nick" aria-label="Nick"></td>
           <td class="num">${p.count}</td>
           <td><span class="acts"><button type="button" class="btn small primary" data-p-save="${esc(p.key)}">Kaydet</button>
@@ -553,7 +586,7 @@ function playersHTML(admin) {
       ? `<td><span class="acts"><button type="button" class="btn small" data-p-edit="${esc(p.key)}">Düzenle</button>
           ${p.count === 0 && p.registered ? `<button type="button" class="btn small" data-p-del="${esc(p.key)}">Sil</button>` : ''}</span></td>`
       : '';
-    return `<tr><td class="pname">${esc(p.name)}</td><td class="pnick">${p.nick ? esc(p.nick) : '<span class="dim">–</span>'}</td><td class="num">${p.count}</td>${acts}</tr>`;
+    return `<tr><td class="pname">${avatarHTML(p)}${esc(p.name)}</td><td class="pnick">${p.nick ? esc(p.nick) : '<span class="dim">–</span>'}</td><td class="num">${p.count}</td>${acts}</tr>`;
   }).join('');
   return `<section class="block" id="players">
       <div class="block-head"><h2>Oyuncular</h2><span class="dim">${roster.length} oyuncu</span></div>
@@ -611,20 +644,32 @@ function bindPlayers() {
   }));
   view.querySelector('[data-p-cancel]')?.addEventListener('click', () => { state.playerEdit = null; render(); });
 
-  view.querySelector('[data-p-save]')?.addEventListener('click', e => {
-    const key = e.currentTarget.dataset.pSave;
+  view.querySelector('[data-p-save]')?.addEventListener('click', async e => {
+    const btn = e.currentTarget;
+    const key = btn.dataset.pSave;
     const current = S.playerList(state.db).find(p => p.key === key);
     if (!current) return;
     const nameEl = document.getElementById('pe-name');
     const name = current.count ? current.name : S.cleanName(nameEl.value);
     const nick = S.cleanName(document.getElementById('pe-nick').value);
-    if (name === current.name && nick === current.nick) { state.playerEdit = null; render(); return; }
+    const file = document.getElementById('pe-photo')?.files[0];
+    if (name === current.name && nick === current.nick && !file) { state.playerEdit = null; render(); return; }
     const err = validatePlayer(state.db, name, nick, key);
     if (err) {
       document.getElementById('p-msg').innerHTML = `<p class="msg err">${esc(err)}</p>`;
       return;
     }
-    playerChange(db => {
+    let newPhoto = null;
+    if (file) {
+      btn.textContent = 'Yükleniyor…';
+      try { newPhoto = await uploadPhoto(file, key); } catch (er) {
+        document.getElementById('p-msg').innerHTML = `<p class="msg err">Fotoğraf yüklenemedi: ${esc(er.status ? errorText(er) : 'Geçerli bir resim seç.')}</p>`;
+        btn.textContent = 'Kaydet';
+        return;
+      }
+    }
+    let oldPhoto = '';
+    await playerChange(db => {
       const fresh = S.playerList(db).find(p => p.key === key);
       if (!fresh) throw userError('Oyuncu bulunamadı. Sayfayı yenile.');
       const newName = fresh.count ? fresh.name : name;
@@ -634,8 +679,10 @@ function bindPlayers() {
       if (!entry) { entry = { name: fresh.name }; db.players.push(entry); }
       entry.name = newName;
       if (nick) entry.nick = nick; else delete entry.nick;
+      if (newPhoto) { oldPhoto = entry.photo || ''; entry.photo = newPhoto; }
       db.log.push({ at: new Date().toISOString(), action: 'player-edit', before: { name: fresh.name, nick: fresh.nick }, after: { name: newName, nick } });
     }, `Oyuncu düzeltildi: ${current.name}`, `${name} güncellendi.`);
+    if (oldPhoto && oldPhoto !== newPhoto) deletePhoto(oldPhoto);
   });
 
   view.querySelectorAll('[data-p-del]').forEach(b => b.addEventListener('click', () => {
@@ -948,7 +995,7 @@ function placeClass(place, n) {
   return '';
 }
 
-const PLACE_TAG = { win: 'kazanan', second: '2.', third: '3.', loser: 'ilk kaybeden' };
+const PLACE_TAG = { win: 'kazanan', second: '2.', third: '3.', loser: 'son' };
 const PLACE_ICON = { win: '👑', second: '🥈', third: '🥉', loser: '💩' };
 
 function gameRankHTML(g, nk) {
@@ -1013,6 +1060,7 @@ function seatScale(n) {
 
 function pokerTableHTML(g, nk) {
   const n = g.players.length;
+  const photos = S.photoMap(state.db);
   const scale = seatScale(n);
   const seats = g.players.map((name, i) => {
     const place = i + 1;
@@ -1021,8 +1069,12 @@ function pokerTableHTML(g, nk) {
     const pos = seatPos(i, n);
     const cls = placeClass(place, n);
     const icon = PLACE_ICON[cls] || '';
+    const photo = photos[S.nameKey(name)];
+    const face = photo
+      ? `<span class="av has-photo"><img src="${esc(photo)}" alt="" loading="lazy"></span><span class="pnum">${place}</span>`
+      : `<span class="av">${place}</span>`;
     return `<div class="pseat${cls ? ` ${cls}` : ''}" style="left:${pos.x.toFixed(1)}%;top:${pos.y.toFixed(1)}%">
-        <span class="av-wrap"><span class="av">${place}</span>${icon ? `<span class="picon" aria-hidden="true">${icon}</span>` : ''}</span>
+        <span class="av-wrap">${face}${icon ? `<span class="picon" aria-hidden="true">${icon}</span>` : ''}</span>
         <span class="nm">${esc(disp)}</span>
         <span class="pt">${pts}<small>p</small></span>
       </div>`;
@@ -1041,7 +1093,7 @@ function renderOyunlar() {
 
   const head = `<section class="page-head">
       <p class="eyebrow">Geçmiş</p><h1>Oyunlar</h1>
-      <p class="lede">Her oyunun tam sıralaması, kim kazandı, kim ilk kaybeden oldu — hepsi burada. Tablo ya da masa görünümüyle incele.</p>
+      <p class="lede">Her oyunun tam sıralaması, kim kazandı, kim sonuncu oldu — hepsi burada. Tablo ya da masa görünümüyle incele.</p>
     </section>`;
 
   if (!games.length) {
@@ -1056,7 +1108,7 @@ function renderOyunlar() {
 
   let body;
   if (gv === 'grid') {
-    const legend = `<div class="plegend"><span>👑 Kazanan</span><span>🥈 2.</span><span>🥉 3.</span><span>💩 İlk kaybeden</span></div>`;
+    const legend = `<div class="plegend"><span>👑 Kazanan</span><span>🥈 2.</span><span>🥉 3.</span><span>💩 Son</span></div>`;
     body = `${legend}<div class="goyun-grid">${games.map(g => `
       <article class="gcard">
         <div class="gcard-head">
@@ -1217,7 +1269,7 @@ function renderYardim() {
       <dl class="defs">
         <dt>Ana Tablo</dt><dd>Bütün zamanların tablosu. Hiç sıfırlanmaz, açılışta toplam puana göre sıralıdır.</dd>
         <dt>Ligler</dt><dd>Her lig 1 Ekim'de başlar, 30 Eylül'de biter. Yeni lig kendiliğinden açılır, geçmiş ligler menüde kalır. Açılışta lig puanına göre sıralıdır.</dd>
-        <dt>Oyunlar</dt><dd>Oynanmış her oyunun tam sıralaması; tablo ya da kart görünümüyle. Kazanan ve ilk kaybeden işaretlenir.</dd>
+        <dt>Oyunlar</dt><dd>Oynanmış her oyunun tam sıralaması; tablo ya da kart görünümüyle. Kazanan ve sonuncu işaretlenir.</dd>
         <dt>Yeni Veri</dt><dd>Oyuncular ve nickleri, maç kaydı, bütün oyunların listesi, CSV ve değişiklik geçmişi.</dd>
         <dt>Blindlar</dt><dd>Oyuncu sayısı, çipler ve hedef süreden başlangıç blind'larını ve ne zaman ne kadar artacaklarını hesaplar. Girdiğin değerler bu cihazda hatırlanır.</dd>
       </dl></section>
@@ -1225,7 +1277,7 @@ function renderYardim() {
     <section><h2>Lig puanı</h2>
       <ul class="pts"><li><b>N</b>1.</li><li><b>N−2</b>2.</li><li><b>N−4</b>3.</li><li><b>0</b>diğerleri</li></ul>
       <p>Puan, oyuncu sayısına (N) göre ölçeklenir: 10 kişilik bir oyunu kazanmak, 5 kişilik bir oyunu kazanmaktan daha değerlidir. Kazanan N puan alır, 2. N−2, 3. N−4 (hiç negatif olmaz), geri kalanlar puan almaz. Puanlar, ligin (ya da Ana Tablo'da bütün zamanların) tüm oyunlarında toplanır ve her iki tablo da açılışta bu puana göre sıralıdır. Puan eşitse önce 1.lik, sonra 2.lik, sonra 3.lük sayısı fazla olan öne geçer.</p>
-      <p><strong>İlk kaybeden:</strong> podyuma en yakın ama giremeyen, yani 4. sırada bitiren oyuncu. Puan almaz ama "Detaylı istatistikler" ve <a href="#oyunlar">Oyunlar</a> sayfasında ayrıca işaretlenir.</p></section>
+      <p><strong>Son:</strong> oyunu sonuncu (en az 4 kişilik masada) bitiren oyuncu 💩 ile işaretlenir. Puan almaz ama "Detaylı istatistikler" ve <a href="#oyunlar">Oyunlar</a> sayfasında ayrıca işaretlenir.</p></section>
 
     <section><h2>Sütunlar</h2>
       <dl class="defs">

@@ -21,6 +21,7 @@ await fs.mkdir(path.join(OUT, 'out'), { recursive: true });
 await fs.mkdir(path.join(OUT, 'data'), { recursive: true });
 for (const item of COPY) await fs.cp(path.join(ROOT, item), path.join(OUT, item), { recursive: true });
 await fs.copyFile(DB_PATH, path.join(OUT, 'data/db.json'));
+if (!process.env.DB_PATH) await fs.cp(path.join(ROOT, 'data/photos'), path.join(OUT, 'data/photos'), { recursive: true }).catch(() => {});
 
 const db = JSON.parse(await fs.readFile(DB_PATH, 'utf8'));
 const today = process.env.TODAY || S.todayISO();
