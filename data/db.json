@@ -49,6 +49,7 @@
     {"at":"2026-11-19T21:48:29.686Z","action":"add","id":6,"after":{"date":"2026-11-04","players":["Mert","Mete","Recep","Alper","Anıl","Doruk","Mehmet"]}},
     {"at":"2026-11-19T21:49:04.734Z","action":"add","id":7,"after":{"date":"2026-11-19","players":["Anıl","Efe","Orhan","Mete","Doruk","Mert","Recep"]}},
     {"at":"2026-11-27T01:16:51.142Z","action":"player-add","after":{"name":"Alex","nick":"Komsu"}},
-    {"at":"2026-11-27T01:17:42.819Z","action":"add","id":8,"after":{"date":"2026-11-27","players":["Doruk","Mert","Mehmet","Recep","Mete","Efe","Alex","Anıl"]}}
+    {"at":"2026-11-27T01:17:42.819Z","action":"add","id":8,"after":{"date":"2026-11-27","players":["Doruk","Mert","Mehmet","Recep","Mete","Efe","Alex","Anıl"]}},
+    {"at":"2026-11-28T17:26:46.144Z","action":"player-edit","before":{"name":"Mete","nick":"MetOsimhen"},"after":{"name":"Mete","nick":"MetOsimhen"}}
   ]
 }
