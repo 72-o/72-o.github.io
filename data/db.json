@@ -5,7 +5,7 @@
     {"name":"Mete","nick":"MetOsimhen","photo":"data/photos/mx0ou1pw.jpg"},
     {"name":"Gökay"},
     {"name":"Barış"},
-    {"name":"Recep"},
+    {"name":"Recep","photo":"data/photos/mx0ow2ni.jpg"},
     {"name":"Doruk","nick":"D.S.K"},
     {"name":"Alper","nick":"AEK"},
     {"name":"Mehmet","nick":"MeÇo"},
@@ -56,6 +56,7 @@
     {"at":"2026-11-28T17:29:11.358Z","action":"player-edit","before":{"name":"Mete","nick":"MetOsimhen"},"after":{"name":"Mete","nick":"MetOsimhen"}},
     {"at":"2026-11-28T17:29:36.776Z","action":"player-edit","before":{"name":"Mete","nick":"MetOsimhen"},"after":{"name":"Mete","nick":"MetOsimhen"}},
     {"at":"2026-11-28T17:31:03.891Z","action":"player-edit","before":{"name":"Mete","nick":"MetOsimhen"},"after":{"name":"Mete","nick":"MetOsimhen"}},
-    {"at":"2026-11-28T17:32:21.972Z","action":"player-edit","before":{"name":"Mete","nick":"MetOsimhen"},"after":{"name":"Mete","nick":"MetOsimhen"}}
+    {"at":"2026-11-28T17:32:21.972Z","action":"player-edit","before":{"name":"Mete","nick":"MetOsimhen"},"after":{"name":"Mete","nick":"MetOsimhen"}},
+    {"at":"2026-11-28T17:33:56.445Z","action":"player-edit","before":{"name":"Recep","nick":""},"after":{"name":"Recep","nick":""}}
   ]
 }
