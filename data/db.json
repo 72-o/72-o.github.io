@@ -2,7 +2,7 @@
   "version": 1,
   "players": [
     {"name":"Orhan","nick":"OBE"},
-    {"name":"Mete","nick":"MetOsimhen","photo":"data/photos/mx0osdii.jpg"},
+    {"name":"Mete","nick":"MetOsimhen","photo":"data/photos/mx0ou1pw.jpg"},
     {"name":"Gökay"},
     {"name":"Barış"},
     {"name":"Recep"},
@@ -55,6 +55,7 @@
     {"at":"2026-11-28T17:28:41.347Z","action":"player-edit","before":{"name":"Mete","nick":"MetOsimhen"},"after":{"name":"Mete","nick":"MetOsimhen"}},
     {"at":"2026-11-28T17:29:11.358Z","action":"player-edit","before":{"name":"Mete","nick":"MetOsimhen"},"after":{"name":"Mete","nick":"MetOsimhen"}},
     {"at":"2026-11-28T17:29:36.776Z","action":"player-edit","before":{"name":"Mete","nick":"MetOsimhen"},"after":{"name":"Mete","nick":"MetOsimhen"}},
-    {"at":"2026-11-28T17:31:03.891Z","action":"player-edit","before":{"name":"Mete","nick":"MetOsimhen"},"after":{"name":"Mete","nick":"MetOsimhen"}}
+    {"at":"2026-11-28T17:31:03.891Z","action":"player-edit","before":{"name":"Mete","nick":"MetOsimhen"},"after":{"name":"Mete","nick":"MetOsimhen"}},
+    {"at":"2026-11-28T17:32:21.972Z","action":"player-edit","before":{"name":"Mete","nick":"MetOsimhen"},"after":{"name":"Mete","nick":"MetOsimhen"}}
   ]
 }
