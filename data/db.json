@@ -10,7 +10,7 @@
     {"name":"Alper","nick":"AEK","photo":"data/photos/mx0pe6e8.jpg"},
     {"name":"Mehmet","nick":"MeÇo","photo":"data/photos/mx0pevj6.jpg"},
     {"name":"Anıl","photo":"data/photos/mx0owa97.jpg"},
-    {"name":"Mert"},
+    {"name":"Mert","photo":"data/photos/mx0pf7so.jpg"},
     {"name":"Efe"},
     {"name":"Cem Ata"},
     {"name":"Furkan"},
@@ -63,6 +63,7 @@
     {"at":"2026-11-28T17:47:35.841Z","action":"player-edit","before":{"name":"Orhan","nick":"OBE"},"after":{"name":"Orhan","nick":"OBE"}},
     {"at":"2026-11-28T17:48:00.931Z","action":"player-edit","before":{"name":"Alper","nick":"AEK"},"after":{"name":"Alper","nick":"AEK"}},
     {"at":"2026-11-28T17:48:17.308Z","action":"player-edit","before":{"name":"Barış","nick":""},"after":{"name":"Barış","nick":""}},
-    {"at":"2026-11-28T17:48:33.689Z","action":"player-edit","before":{"name":"Mehmet","nick":"MeÇo"},"after":{"name":"Mehmet","nick":"MeÇo"}}
+    {"at":"2026-11-28T17:48:33.689Z","action":"player-edit","before":{"name":"Mehmet","nick":"MeÇo"},"after":{"name":"Mehmet","nick":"MeÇo"}},
+    {"at":"2026-11-28T17:48:49.459Z","action":"player-edit","before":{"name":"Mert","nick":""},"after":{"name":"Mert","nick":""}}
   ]
 }
